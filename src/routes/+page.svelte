@@ -82,12 +82,54 @@
       return proj;
     });
   };
+
+  const moveComponentUp = (projectIndex, componentIndex) => {
+    projects.update(proj => {
+      const components = proj[projectIndex].components;
+      [components[componentIndex - 1], components[componentIndex]] = [components[componentIndex], components[componentIndex - 1]];
+      return proj;
+    });
+  };
+
+  const moveComponentDown = (projectIndex, componentIndex) => {
+    projects.update(proj => {
+      const components = proj[projectIndex].components;
+      [components[componentIndex + 1], components[componentIndex]] = [components[componentIndex], components[componentIndex + 1]];
+      return proj;
+    });
+  };
+
+  const moveProjectUp = (projectIndex) => {
+    projects.update(proj => {
+      [proj[projectIndex - 1], proj[projectIndex]] = [proj[projectIndex], proj[projectIndex - 1]];
+      return proj;
+    });
+  };
+
+  const moveProjectDown = (projectIndex) => {
+    projects.update(proj => {
+      [proj[projectIndex + 1], proj[projectIndex]] = [proj[projectIndex], proj[projectIndex + 1]];
+      return proj;
+    });
+  };
 </script>
 
 <main class="flex flex-col h-screen">
   <Toolbar {mode} class="w-full" />
   <div class="flex flex-1 overflow-hidden">
-    <Sidebar {user} {projects} {selectedElement} {setSelectedElement} {addComponent} {addProject} class="h-full" />
+    <Sidebar
+      {user}
+      {projects}
+      {selectedElement}
+      {setSelectedElement}
+      {addComponent}
+      {addProject}
+      {moveComponentUp}
+      {moveComponentDown}
+      {moveProjectUp}
+      {moveProjectDown}
+      class="h-full"
+    />
     <div class="flex-1 flex flex-col overflow-y-auto p-6">
       <UserProfile {user} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
       <ProjectList {projects} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
