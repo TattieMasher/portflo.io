@@ -10,8 +10,15 @@
   </label>
   <div class="collapse-content"> 
     <div class="form-control">
+      <!-- TODO: make this checkbox conditionally render the below background color section -->
+      <div class="form-control">
+        <label class="cursor-pointer label">
+          <span class="label-text">Remember me</span>
+          <input type="checkbox" checked="checked" class="checkbox checkbox-info" />
+        </label>
+      </div>
       <label for="background-color-control" class="label">
-        <span class="label-text">Background Color</span>
+        <span class="label-text">Background Colour</span>
       </label>
       <input id="background-color-control" type="color" class="input input-bordered" bind:value={$styles.backgroundColor} on:input={(e) => updateStyle('backgroundColor', e.target.value)} />
     </div>

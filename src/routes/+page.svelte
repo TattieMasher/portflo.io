@@ -118,24 +118,28 @@
 <main class="flex flex-col h-screen">
   <Toolbar {mode} class="w-full" />
   <div class="flex flex-1 overflow-hidden">
-    <Sidebar
-      {user}
-      {projects}
-      {selectedElement}
-      {setSelectedElement}
-      {addComponent}
-      {addProject}
-      {moveComponentUp}
-      {moveComponentDown}
-      {moveProjectUp}
-      {moveProjectDown}
-      class="h-full"
-    />
+    {#if $mode == 'edit'}
+      <Sidebar
+        {user}
+        {projects}
+        {selectedElement}
+        {setSelectedElement}
+        {addComponent}
+        {addProject}
+        {moveComponentUp}
+        {moveComponentDown}
+        {moveProjectUp}
+        {moveProjectDown}
+        class="h-full"
+      />
+    {/if}
     <div class="flex-1 flex flex-col overflow-y-auto p-6">
       <UserProfile {user} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
       <ProjectList {projects} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
     </div>
-    <RightSidebar {selectedElement} {setSelectedElement} class="h-full" />
+    {#if $mode == 'edit'}
+      <RightSidebar {selectedElement} {setSelectedElement} class="h-full" />
+    {/if}
   </div>
 </main>
 

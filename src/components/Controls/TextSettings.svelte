@@ -35,7 +35,7 @@
     </div>
     <div class="form-control">
       <label for="text-color-control" class="label">
-        <span class="label-text">Color</span>
+        <span class="label-text">Colour</span>
       </label>
       <input id="text-color-control" type="color" class="input input-bordered" bind:value={$styles.color} on:input={(e) => updateStyle('color', e.target.value)} />
     </div>
