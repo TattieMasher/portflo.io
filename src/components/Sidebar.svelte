@@ -32,13 +32,17 @@
   const handleAddProject = () => {
     addProject();
   };
+
+  const selectPortfolio = () => {
+    setSelectedElement('portfolio');
+  };
 </script>
 
 <aside class="menu p-4 w-80 bg-gray-800 text-white h-full overflow-y-auto">
   <ul class="space-y-4">
     <li class="menu-title"><span class="text-2xl font-semibold">Menu</span></li>
     <li>
-      <button on:click={selectUser} class={`text-xl block p-2 rounded cursor-pointer ${selectedElement === 'TODO' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>Portfolio Settings</button>
+      <button on:click={selectPortfolio} class={`text-xl block p-2 rounded cursor-pointer ${selectedElement === 'portfolio' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>Portfolio Settings</button>
     </li>
     <li>
       <button on:click={selectUser} class={`block p-2 rounded cursor-pointer ${selectedElement === 'user' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>User Profile</button>

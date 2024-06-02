@@ -14,7 +14,13 @@
   });
 
   onMount(() => {
-    if (selectedElement) {
+    if (selectedElement === 'portfolio') {
+      styles.set({
+        fontSize: document.body.style.fontSize || '16px',
+        backgroundColor: document.body.style.backgroundColor || '#ffffff',
+        color: document.body.style.color || '#000000'
+      });
+    } else if (selectedElement) {
       const element = document.getElementById(selectedElement);
       if (element) {
         styles.set({
@@ -27,14 +33,18 @@
   });
 
   const updateStyle = (property, value) => {
-    const element = document.getElementById(selectedElement);
-    if (element) {
-      element.style[property] = value;
-      styles.update(styles => {
-        styles[property] = value;
-        return styles;
-      });
+    if (selectedElement === 'portfolio') {
+      document.body.style[property] = value;
+    } else {
+      const element = document.getElementById(selectedElement);
+      if (element) {
+        element.style[property] = value;
+      }
     }
+    styles.update(styles => {
+      styles[property] = value;
+      return styles;
+    });
   };
 </script>
 

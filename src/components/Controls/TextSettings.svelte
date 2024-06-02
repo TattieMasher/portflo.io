@@ -1,13 +1,14 @@
 <script>
-  import { writable } from 'svelte/store';
   export let styles;
   export let updateStyle;
+
   const fontSizes = {
-    small: '12px',
-    medium: '16px',
-    large: '20px',
-    extraLarge: '24px'
+    Small: '12px',
+    Medium: '16px',
+    Large: '20px',
+    XL: '24px'
   };
+
   const updateFontSize = (size) => {
     updateStyle('fontSize', fontSizes[size]);
   };
@@ -26,8 +27,8 @@
       <div id="font-size-control" class="flex flex-col space-y-2">
         {#each Object.keys(fontSizes) as size}
           <label class="flex items-center">
-            <input type="radio" name="font-size" value={size} on:change={() => updateFontSize(size)} checked={$styles.fontSize === fontSizes[size]} class="radio" />
-            <span class="ml-2">{size.charAt(0).toUpperCase() + size.slice(1)}</span>
+            <input type="radio" name="font-size" value={fontSizes[size]} on:change={() => updateFontSize(size)} />
+            <span class="ml-2">{size}</span>
           </label>
         {/each}
       </div>
@@ -40,15 +41,3 @@
     </div>
   </div>
 </div>
-
-<style>
-  .collapse input[type="checkbox"] {
-    display: none;
-  }
-  .collapse input[type="checkbox"]:checked + .collapse-title + .collapse-content {
-    display: block;
-  }
-  .collapse-content {
-    display: none;
-  }
-</style>

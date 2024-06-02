@@ -17,15 +17,3 @@
     </div>
   </div>
 </div>
-
-<style>
-  .collapse input[type="checkbox"] {
-    display: none;
-  }
-  .collapse input[type="checkbox"]:checked + .collapse-title + .collapse-content {
-    display: block;
-  }
-  .collapse-content {
-    display: none;
-  }
-</style>
