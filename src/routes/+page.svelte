@@ -54,6 +54,10 @@
     }
   ]);
 
+  projects.subscribe(value => {
+    console.log('Projects updated:', value);
+  });
+
   const addComponent = (projectIndex) => {
     projects.update(proj => {
       proj[projectIndex].components.push({
@@ -62,6 +66,7 @@
         type: 'text',
         style: ''
       });
+      console.log('Added component to project', projectIndex);
       return proj;
     });
   };
@@ -74,6 +79,7 @@
         project_url: '#',
         components: []
       });
+      console.log('Added new project');
       return proj;
     });
   };
@@ -112,28 +118,24 @@
 <main class="flex flex-col h-screen">
   <Toolbar {mode} class="w-full" />
   <div class="flex flex-1 overflow-hidden">
-    {#if $mode == 'edit'}
-      <Sidebar
-        {user}
-        {projects}
-        {selectedElement}
-        {setSelectedElement}
-        {addComponent}
-        {addProject}
-        {moveComponentUp}
-        {moveComponentDown}
-        {moveProjectUp}
-        {moveProjectDown}
-        class="h-full"
-      />
-    {/if}
+    <Sidebar
+      {user}
+      {projects}
+      {selectedElement}
+      {setSelectedElement}
+      {addComponent}
+      {addProject}
+      {moveComponentUp}
+      {moveComponentDown}
+      {moveProjectUp}
+      {moveProjectDown}
+      class="h-full"
+    />
     <div class="flex-1 flex flex-col overflow-y-auto p-6">
       <UserProfile {user} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
       <ProjectList {projects} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
     </div>
-    {#if $mode == 'edit'}
-      <RightSidebar {selectedElement} {setSelectedElement} class="h-full" />
-    {/if}
+    <RightSidebar {selectedElement} {setSelectedElement} class="h-full" />
   </div>
 </main>
 
@@ -144,13 +146,6 @@
   }
   .flex-1 {
     flex: 1;
-    overflow-y: auto;
-  }
-  .overflow-hidden {
-    overflow: hidden;
-  }
-  aside {
-    height: 100%;
     overflow-y: auto;
   }
 </style>
