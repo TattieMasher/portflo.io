@@ -1,5 +1,6 @@
 <script>
   import { writable } from 'svelte/store';
+  import { onMount } from 'svelte';
 
   export let selectedElement;
   export let setSelectedElement;
@@ -10,16 +11,18 @@
     color: '#000000'
   });
 
-  $: if (selectedElement) {
-    const element = document.getElementById(selectedElement);
-    if (element) {
-      styles.set({
-        fontSize: element.style.fontSize || '16px',
-        backgroundColor: element.style.backgroundColor || '#ffffff',
-        color: element.style.color || '#000000'
-      });
+  onMount(() => {
+    $: if (selectedElement) {
+      const element = document.getElementById(selectedElement);
+      if (element) {
+        styles.set({
+          fontSize: element.style.fontSize || '16px',
+          backgroundColor: element.style.backgroundColor || '#ffffff',
+          color: element.style.color || '#000000'
+        });
+      }
     }
-  }
+  });
 
   const updateStyle = (property, value) => {
     const element = document.getElementById(selectedElement);
