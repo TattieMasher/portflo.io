@@ -3,6 +3,7 @@
   import ProjectList from '../components/ProjectList.svelte';
   import Toolbar from '../components/Toolbar.svelte';
   import Sidebar from '../components/Sidebar.svelte';
+  import RightSidebar from '../components/RightSidebar.svelte';
   import { writable } from 'svelte/store';
 
   let mode = writable('edit');
@@ -53,10 +54,6 @@
     }
   ]);
 
-  projects.subscribe(value => {
-    console.log('Projects updated:', value);
-  });
-
   const addComponent = (projectIndex) => {
     projects.update(proj => {
       proj[projectIndex].components.push({
@@ -65,7 +62,6 @@
         type: 'text',
         style: ''
       });
-      console.log('Added component to project', projectIndex);
       return proj;
     });
   };
@@ -78,7 +74,6 @@
         project_url: '#',
         components: []
       });
-      console.log('Added new project');
       return proj;
     });
   };
@@ -134,6 +129,7 @@
       <UserProfile {user} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
       <ProjectList {projects} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
     </div>
+    <RightSidebar {selectedElement} {setSelectedElement} class="h-full" />
   </div>
 </main>
 
@@ -144,6 +140,13 @@
   }
   .flex-1 {
     flex: 1;
+    overflow-y: auto;
+  }
+  .overflow-hidden {
+    overflow: hidden;
+  }
+  aside {
+    height: 100%;
     overflow-y: auto;
   }
 </style>
