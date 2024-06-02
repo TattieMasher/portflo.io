@@ -11,8 +11,15 @@
     color: '#000000'
   });
 
+  const fontSizes = {
+    small: '12px',
+    medium: '16px',
+    large: '20px',
+    extraLarge: '24px'
+  };
+
   onMount(() => {
-    $: if (selectedElement) {
+    if (selectedElement) {
       const element = document.getElementById(selectedElement);
       if (element) {
         styles.set({
@@ -34,6 +41,10 @@
       });
     }
   };
+
+  const updateFontSize = (size) => {
+    updateStyle('fontSize', fontSizes[size]);
+  };
 </script>
 
 <aside class="menu p-4 w-80 bg-gray-800 text-white h-full overflow-y-auto">
@@ -47,16 +58,33 @@
         </label>
         <div class="collapse-content"> 
           <div class="form-control">
-            <label class="label">
+            <label for="font-size-control" class="label">
               <span class="label-text">Font Size</span>
             </label>
-            <input type="text" class="input input-bordered" bind:value={$styles.fontSize} on:input={(e) => updateStyle('fontSize', e.target.value)} />
+            <div id="font-size-control" class="flex flex-col space-y-2">
+              <label class="flex items-center">
+                <input type="radio" name="font-size" value="small" on:change={() => updateFontSize('small')} checked={$styles.fontSize === '12px'} class="radio" />
+                <span class="ml-2">Small</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="font-size" value="medium" on:change={() => updateFontSize('medium')} checked={$styles.fontSize === '16px'} class="radio" />
+                <span class="ml-2">Medium</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="font-size" value="large" on:change={() => updateFontSize('large')} checked={$styles.fontSize === '20px'} class="radio" />
+                <span class="ml-2">Large</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" name="font-size" value="extraLarge" on:change={() => updateFontSize('extraLarge')} checked={$styles.fontSize === '24px'} class="radio" />
+                <span class="ml-2">Extra Large</span>
+              </label>
+            </div>
           </div>
           <div class="form-control">
-            <label class="label">
+            <label for="text-color-control" class="label">
               <span class="label-text">Color</span>
             </label>
-            <input type="color" class="input input-bordered" bind:value={$styles.color} on:input={(e) => updateStyle('color', e.target.value)} />
+            <input id="text-color-control" type="color" class="input input-bordered" bind:value={$styles.color} on:input={(e) => updateStyle('color', e.target.value)} />
           </div>
         </div>
       </div>
@@ -67,10 +95,10 @@
         </label>
         <div class="collapse-content"> 
           <div class="form-control">
-            <label class="label">
+            <label for="background-color-control" class="label">
               <span class="label-text">Background Color</span>
             </label>
-            <input type="color" class="input input-bordered" bind:value={$styles.backgroundColor} on:input={(e) => updateStyle('backgroundColor', e.target.value)} />
+            <input id="background-color-control" type="color" class="input input-bordered" bind:value={$styles.backgroundColor} on:input={(e) => updateStyle('backgroundColor', e.target.value)} />
           </div>
         </div>
       </div>

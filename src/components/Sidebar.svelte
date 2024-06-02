@@ -36,9 +36,12 @@
 
 <aside class="menu p-4 w-80 bg-gray-800 text-white h-full overflow-y-auto">
   <ul class="space-y-4">
-    <li class="menu-title"><span class="text-xl font-semibold">Menu</span></li>
+    <li class="menu-title"><span class="text-2xl font-semibold">Menu</span></li>
     <li>
-      <a on:click={selectUser} class={`block p-2 rounded cursor-pointer ${selectedElement === 'user' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>User Profile</a>
+      <button on:click={selectUser} class={`text-xl block p-2 rounded cursor-pointer ${selectedElement === 'TODO' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>Portfolio Settings</button>
+    </li>
+    <li>
+      <button on:click={selectUser} class={`block p-2 rounded cursor-pointer ${selectedElement === 'user' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>User Profile</button>
     </li>
     {#each $projects as project, projectIndex}
       <li class="menu-title mt-4">
