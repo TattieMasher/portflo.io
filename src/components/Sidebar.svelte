@@ -67,12 +67,12 @@
         {/each}
       </ul>
       <li class="mt-2">
-        <button class="btn btn-sm btn-tertiary w-full" on:click={() => handleAddComponent(projectIndex)}>+ Add Component</button>
+        <button class="btn btn-outline btn-sm btn-tertiary w-full" on:click={() => handleAddComponent(projectIndex)}>+ Add Component</button>
       </li>
       <div class="divider"></div> 
     {/each}
     <li class="mt-4">
-      <button class="btn btn-sm btn-secondary w-full" on:click={handleAddProject}>+ Add Project</button>
+      <button class="btn btn-outline btn-sm btn-secondary w-full" on:click={handleAddProject}>+ Add Project</button>
     </li>
   </ul>
 </aside>
