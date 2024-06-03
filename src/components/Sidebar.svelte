@@ -45,7 +45,7 @@
       <button on:click={selectPortfolio} class={`text-xl block p-2 rounded cursor-pointer ${selectedElement === 'portfolio' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>Portfolio Settings</button>
     </li>
     <li>
-      <button on:click={selectUser} class={`block p-2 rounded cursor-pointer ${selectedElement === 'user' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>User Profile</button>
+      <button on:click={selectUser} class={`block p-2 rounded text-center cursor-pointer ${selectedElement === 'user' ? 'bg-gray-700' : 'hover:bg-gray-700'}`}>User Profile</button>
     </li>
     {#each $projects as project, projectIndex}
       <li class="menu-title mt-4">

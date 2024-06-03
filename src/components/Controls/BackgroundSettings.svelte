@@ -13,7 +13,7 @@
       <!-- TODO: make this checkbox conditionally render the below background color section -->
       <div class="form-control">
         <label class="cursor-pointer label">
-          <span class="label-text">Remember me</span>
+          <span class="label-text">Transparent</span>
           <input type="checkbox" checked="checked" class="checkbox checkbox-info" />
         </label>
       </div>

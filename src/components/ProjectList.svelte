@@ -20,7 +20,7 @@
 
 <div class="grid grid-cols-1 gap-4">
   {#each $projects as project, index}
-    <div id={`project-${index}`} class={`card bg-base-100 shadow-xl`}>
+    <div id={`project-${index}`} class={`card`}> <!-- Removed classes: bg-base-100 shadow-xl -->
       <div class="card-body">
         {#if isEditMode}
           <input class="input input-bordered w-full max-w-xs" type="text" bind:value={project.title} placeholder="Project Title" />

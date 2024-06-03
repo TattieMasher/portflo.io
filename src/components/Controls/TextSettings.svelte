@@ -1,4 +1,5 @@
 <script>
+  import Icon from '@iconify/svelte';
   export let styles;
   export let updateStyle;
 
@@ -31,6 +32,18 @@
             <span class="ml-2">{size}</span>
           </label>
         {/each}
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="form-control">
+      <label for="font-size-control" class="label">
+        <span class="label-text">Alignment</span>
+      </label>
+      <div class="join gap-5">
+        <Icon icon="radix-icons:text-align-left" class="text-4xl hover:bg-gray-700"/>
+        <Icon icon="radix-icons:text-align-center" class="text-4xl hover:bg-gray-700"/>
+        <Icon icon="radix-icons:text-align-right" class="text-4xl hover:bg-gray-700"/>
+        <Icon icon="radix-icons:text-align-justify" class="text-4xl hover:bg-gray-700"/>
       </div>
     </div>
     <div class="form-control">
