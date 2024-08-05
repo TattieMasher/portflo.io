@@ -12,17 +12,28 @@
 
   const selectUser = () => {
     setSelectedElement('user');
-    document.getElementById('user-profile').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const userProfileElement = document.getElementById('user-profile');
+    if (userProfileElement) {
+      userProfileElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      console.warn("Element with ID 'user-profile' not found.");
+    }
   };
 
   const selectProject = (index) => {
     setSelectedElement(`project-${index}`);
-    document.getElementById(`project-${index}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const projectElement = document.getElementById(`project-${index}`);
+    if (projectElement) {
+      projectElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 
   const selectComponent = (projectIndex, componentIndex) => {
     setSelectedElement(`project-${projectIndex}-component-${componentIndex}`);
-    document.getElementById(`project-${projectIndex}-component-${componentIndex}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const componentElement = document.getElementById(`project-${projectIndex}-component-${componentIndex}`);
+    if (componentElement) {
+      componentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 
   const handleAddComponent = (projectIndex) => {

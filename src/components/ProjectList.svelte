@@ -20,6 +20,7 @@
 
   const selectElement = (element) => {
     setSelectedElement(element);
+    console.log('Selected Element:', element);
   };
 </script>
 
@@ -56,7 +57,7 @@
 <style>
   .highlight {
     border: 2px solid blue;
-    animation: highlight-fade 2s forwards;
+    animation: highlight-fade 4s forwards;
   }
 
   @keyframes highlight-fade {
