@@ -10,6 +10,7 @@
   let selectedElement = writable(null);
 
   const setSelectedElement = (element) => {
+    console.log('Selected Element:', element);
     selectedElement.set(element);
   };
 
@@ -53,10 +54,6 @@
       ]
     }
   ]);
-
-  projects.subscribe(value => {
-    console.log('Projects updated:', value);
-  });
 
   const addComponent = (projectIndex) => {
     projects.update(proj => {
@@ -118,28 +115,24 @@
 <main class="flex flex-col h-screen">
   <Toolbar {mode} class="w-full" />
   <div class="flex flex-1 overflow-hidden">
-    {#if $mode == 'edit'}
-      <Sidebar
-        {user}
-        {projects}
-        {selectedElement}
-        {setSelectedElement}
-        {addComponent}
-        {addProject}
-        {moveComponentUp}
-        {moveComponentDown}
-        {moveProjectUp}
-        {moveProjectDown}
-        class="h-full"
-      />
-    {/if}
+    <Sidebar
+      {user}
+      {projects}
+      {selectedElement}
+      {setSelectedElement}
+      {addComponent}
+      {addProject}
+      {moveComponentUp}
+      {moveComponentDown}
+      {moveProjectUp}
+      {moveProjectDown}
+      class="h-full"
+    />
     <div class="flex-1 flex flex-col overflow-y-auto p-6">
       <UserProfile {user} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
-      <ProjectList {projects} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
+      <ProjectList {projects} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} {setSelectedElement} />
     </div>
-    {#if $mode == 'edit'}
-      <RightSidebar {selectedElement} {setSelectedElement} class="h-full" />
-    {/if}
+    <RightSidebar {selectedElement} {setSelectedElement} class="h-full" />
   </div>
 </main>
 

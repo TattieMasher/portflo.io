@@ -4,6 +4,10 @@
   export let selectedElement;
 </script>
 
+<svelte:head>
+    <title>{user.full_name} | Portflo.io</title> 
+</svelte:head> 
+
 <div class={`card ${selectedElement === 'user' ? 'border border-blue-500' : ''}`}> <!-- Removed classes: bg-base-100 shadow-xl -->
   <figure class="px-10 pt-10">
     <img src={user.profile_picture} alt="Profile Picture" class="rounded-full w-24 h-24" />

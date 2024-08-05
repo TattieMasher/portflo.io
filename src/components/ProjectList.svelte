@@ -2,6 +2,7 @@
   export let projects;
   export let isEditMode = false;
   export let selectedElement;
+  export let setSelectedElement;
 
   const highlightElement = (id) => {
     const element = document.getElementById(id);
@@ -16,11 +17,15 @@
   $: if (selectedElement) {
     highlightElement(selectedElement);
   }
+
+  const selectElement = (element) => {
+    setSelectedElement(element);
+  };
 </script>
 
 <div class="grid grid-cols-1 gap-4">
   {#each $projects as project, index}
-    <div id={`project-${index}`} class={`card`}> <!-- Removed classes: bg-base-100 shadow-xl -->
+    <div id={`project-${index}`} class={`card`} on:click={() => selectElement(`project-${index}`)}>
       <div class="card-body">
         {#if isEditMode}
           <input class="input input-bordered w-full max-w-xs" type="text" bind:value={project.title} placeholder="Project Title" />
@@ -33,7 +38,7 @@
         {/if}
 
         {#each project.components as component, componentIndex}
-          <div id={`project-${index}-component-${componentIndex}`} class="mt-4">
+          <div id={`project-${index}-component-${componentIndex}`} class="mt-4" on:click={(e) => { e.stopPropagation(); selectElement(`project-${index}-component-${componentIndex}`); }}>
             {#if isEditMode}
               <input class="input input-bordered w-full max-w-xs" type="text" bind:value={component.title} placeholder="Component Title" />
               <textarea class="textarea textarea-bordered w-full max-w-xs mt-2" bind:value={component.content} placeholder="Component Content"></textarea>
