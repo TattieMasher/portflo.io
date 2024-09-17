@@ -1,5 +1,5 @@
 <script>
-  export let projects;
+  import { projects } from '../stores/projects.js';
   export let isEditMode = false;
   export let selectedElement;
   export let setSelectedElement;

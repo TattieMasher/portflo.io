@@ -1,6 +1,6 @@
 <script>
+  import { projects } from '../stores/projects.js'; // Import projects from the store
   export let user;
-  export let projects;
   export let selectedElement;
   export let setSelectedElement;
   export let addComponent;
@@ -79,9 +79,7 @@
           <li class="flex justify-between items-center">
             <div class="flex justify-between items-center">
               <a on:click={() => selectComponent(projectIndex, componentIndex)} class={`${selectedElement === `project-${projectIndex}-component-${componentIndex}` ? 'bg-gray-700' : ''}`}>{component.title || 'Untitled Component'}</a>
-              <!-- svelte-ignore a11y-no-static-element-interactions -->
-              <!-- svelte-ignore a11y-click-events-have-key-events -->
-              <div class="flex" on:click={(e) => { e.stopPropagation(); moveComponentUp(projectIndex, componentIndex); }} >
+              <div class="flex">
                 {#if componentIndex > 0}
                   <button class="btn btn-xs btn-outline mx-1" on:click={(e) => { e.stopPropagation(); moveComponentUp(projectIndex, componentIndex); }}>↑</button>
                 {/if}
@@ -96,7 +94,7 @@
       <li class="mt-2">
         <button class="btn btn-outline btn-sm btn-tertiary w-full" on:click={() => handleAddComponent(projectIndex)}>+ Add Component</button>
       </li>
-      <div class="divider"></div> 
+      <div class="divider"></div>
     {/each}
     <li class="mt-4">
       <button class="btn btn-outline btn-sm btn-secondary w-full" on:click={handleAddProject}>+ Add Project</button>

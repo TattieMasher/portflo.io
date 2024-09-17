@@ -4,7 +4,9 @@
   import Toolbar from '../components/Toolbar.svelte';
   import Sidebar from '../components/Sidebar.svelte';
   import RightSidebar from '../components/RightSidebar.svelte';
-  import { writable } from 'svelte/store';
+  import { writable, get } from 'svelte/store';
+  import { projects } from '../stores/projects.js'; // Import projects from the store
+  import { styles } from '../stores/styles.js';
 
   let mode = writable('edit');
   let selectedElement = writable(null);
@@ -17,44 +19,11 @@
   let user = {
     full_name: 'John Doe',
     bio: 'A passionate developer.',
-    profile_picture: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/32/KilmarnockLogo.svg/1200px-KilmarnockLogo.svg.png'
+    profile_picture:
+      'https://upload.wikimedia.org/wikipedia/en/thumb/3/32/KilmarnockLogo.svg/1200px-KilmarnockLogo.svg.png',
   };
 
-  let projects = writable([
-    {
-      title: 'Project 1',
-      description: 'Description of project 1',
-      project_url: '#',
-      components: [
-        {
-          title: 'Component 1.1',
-          content: 'This is a text component in Project 1.',
-          type: 'text',
-          style: 'text-center border p-4 rounded bg-blue-100'
-        },
-        {
-          title: 'Component 1.2',
-          content: 'https://via.placeholder.com/300',
-          type: 'image',
-          style: 'border p-4 rounded bg-red-100'
-        }
-      ]
-    },
-    {
-      title: 'Project 2',
-      description: 'Description of project 2',
-      project_url: '#',
-      components: [
-        {
-          title: 'Component 2.1',
-          content: 'This is a text component in Project 2.',
-          type: 'text',
-          style: 'text-center bg-green-100'
-        }
-      ]
-    }
-  ]);
-
+  // Update functions to work with the projects store
   const addComponent = (projectIndex) => {
     projects.update(proj => {
       proj[projectIndex].components.push({
@@ -110,14 +79,35 @@
       return proj;
     });
   };
+
+  const saveData = async () => {
+    const projectData = get(projects);
+    const stylesData = get(styles);
+    try {
+      const response = await fetch('https://your-api-endpoint.com/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user,
+          projects: projectData,
+          styles: stylesData,
+        }),
+      });
+      const result = await response.json();
+      console.log('Data saved successfully:', result);
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
 </script>
 
 <main class="flex flex-col h-screen">
-  <Toolbar {mode} class="w-full" />
+  <Toolbar {mode} on:save={saveData} class="w-full" />
   <div class="flex flex-1 overflow-hidden">
     <Sidebar
       {user}
-      {projects}
       {selectedElement}
       {setSelectedElement}
       {addComponent}
@@ -130,7 +120,7 @@
     />
     <div class="flex-1 flex flex-col overflow-y-auto p-6">
       <UserProfile {user} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
-      <ProjectList {projects} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} {setSelectedElement} />
+      <ProjectList isEditMode={$mode === 'edit'} selectedElement={$selectedElement} {setSelectedElement} />
     </div>
     <RightSidebar {selectedElement} {setSelectedElement} class="h-full" />
   </div>

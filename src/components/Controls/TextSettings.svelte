@@ -1,13 +1,14 @@
+<!-- components/Controls/TextSettings.svelte -->
 <script>
   import Icon from '@iconify/svelte';
-  export let styles;
+  import { styles } from '../../stores/styles.js'; // Import styles from the store
   export let updateStyle;
 
   const fontSizes = {
     Small: '12px',
     Medium: '16px',
     Large: '20px',
-    XL: '24px'
+    XL: '24px',
   };
 
   const updateFontSize = (size) => {
@@ -16,11 +17,11 @@
 </script>
 
 <div class="collapse collapse-arrow bg-base-200">
-  <input type="checkbox" id="text-settings" /> 
+  <input type="checkbox" id="text-settings" />
   <label for="text-settings" class="collapse-title text-xl font-medium">
     Text Settings
   </label>
-  <div class="collapse-content"> 
+  <div class="collapse-content">
     <div class="form-control">
       <label for="font-size-control" class="label">
         <span class="label-text">Font Size</span>
@@ -28,7 +29,13 @@
       <div id="font-size-control" class="flex flex-col space-y-2">
         {#each Object.keys(fontSizes) as size}
           <label class="flex items-center">
-            <input type="radio" name="font-size" value={fontSizes[size]} on:change={() => updateFontSize(size)} />
+            <input
+              type="radio"
+              name="font-size"
+              value={fontSizes[size]}
+              checked={$styles.fontSize === fontSizes[size]}
+              on:change={() => updateFontSize(size)}
+            />
             <span class="ml-2">{size}</span>
           </label>
         {/each}
