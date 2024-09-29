@@ -1,16 +1,24 @@
 <script>
-  import { styles } from '../../stores/styles.js'; // Import styles from the store
-  export let updateStyle;
+  import { elementStyles } from '../../stores/elementStyles.js';
+  import { selectedElement } from '../../stores/selectedElement.js';
 
-  // Local variable to track whether the background is transparent
-  let isTransparent;
+  let isTransparent = false;
 
-  // Reactive statement to update isTransparent when styles change
-  $: isTransparent = $styles.backgroundColor === 'transparent';
+  $: if ($selectedElement && $elementStyles[$selectedElement]) {
+    isTransparent = $elementStyles[$selectedElement].backgroundColor === 'transparent';
+  }
 
-  // Function to handle checkbox change
   const toggleTransparency = () => {
-    updateStyle('backgroundColor', isTransparent ? '#ffffff' : 'transparent');
+    const elementId = $selectedElement;
+    if (elementId) {
+      elementStyles.update((styles) => ({
+        ...styles,
+        [elementId]: {
+          ...styles[elementId],
+          backgroundColor: isTransparent ? '#ffffff' : 'transparent',
+        },
+      }));
+    }
   };
 </script>
 
@@ -40,8 +48,19 @@
           id="background-color-control"
           type="color"
           class="input input-bordered"
-          bind:value={$styles.backgroundColor}
-          on:input={(e) => updateStyle('backgroundColor', e.target.value)}
+          value={$elementStyles[$selectedElement]?.backgroundColor || '#ffffff'}
+          on:input={(e) => {
+            const elementId = $selectedElement;
+            if (elementId) {
+              elementStyles.update((styles) => ({
+                ...styles,
+                [elementId]: {
+                  ...styles[elementId],
+                  backgroundColor: e.target.value,
+                },
+              }));
+            }
+          }}
         />
       {/if}
     </div>

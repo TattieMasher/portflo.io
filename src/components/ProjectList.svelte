@@ -1,49 +1,85 @@
 <script>
   import { projects } from '../stores/projects.js';
-  export let isEditMode = false;
-  export let selectedElement;
-  export let setSelectedElement;
-
-  const highlightElement = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.classList.add('highlight');
-      setTimeout(() => {
-        element.classList.remove('highlight');
-      }, 2000); // Highlight duration: 2 seconds
-    }
-  };
-
-  $: if (selectedElement) {
-    highlightElement(selectedElement);
-  }
+  import { selectedElement } from '../stores/selectedElement.js';
+  import { elementStyles } from '../stores/elementStyles.js';
+  import { mode } from '../stores/mode.js';
 
   const selectElement = (element) => {
-    setSelectedElement(element);
+    selectedElement.set(element);
     console.log('Selected Element:', element);
   };
 </script>
 
 <div class="grid grid-cols-1 gap-4">
   {#each $projects as project, index}
-    <div id={`project-${index}`} class={`card`} on:click={() => selectElement(`project-${index}`)}>
+    <div
+      id={`project-${index}`}
+      class="card"
+      on:click={$mode === 'edit' ? () => selectElement(`project-${index}`) : null}
+      class:selected={$mode === 'edit' && $selectedElement === `project-${index}`}
+      style={$elementStyles[`project-${index}`]}
+    >
       <div class="card-body">
-        {#if isEditMode}
-          <input class="input input-bordered w-full max-w-xs" type="text" bind:value={project.title} placeholder="Project Title" />
-          <input class="input input-bordered w-full max-w-xs" type="text" bind:value={project.url} placeholder="Project URL" />
-          <textarea class="textarea textarea-bordered w-full max-w-xs mt-2" bind:value={project.description} placeholder="Project Description"></textarea>
+        {#if $mode === 'edit'}
+          <!-- Input fields for editing project -->
+          <input
+            class="input input-bordered w-full max-w-xs"
+            type="text"
+            bind:value={project.title}
+            placeholder="Project Title"
+          />
+          <input
+            class="input input-bordered w-full max-w-xs"
+            type="text"
+            bind:value={project.project_url}
+            placeholder="Project URL"
+          />
+          <textarea
+            class="textarea textarea-bordered w-full max-w-xs mt-2"
+            bind:value={project.description}
+            placeholder="Project Description"
+          ></textarea>
         {:else}
+          <!-- Display fields for project -->
           <h2 class="card-title">{project.title}</h2>
           <p>{project.description}</p>
-          <a href={project.project_url} target="_blank" class="text-blue-600 hover:underline">View Project</a>
+          <a
+            href={project.project_url}
+            target="_blank"
+            class="text-blue-600 hover:underline"
+          >
+            View Project
+          </a>
         {/if}
 
         {#each project.components as component, componentIndex}
-          <div id={`project-${index}-component-${componentIndex}`} class="mt-4" on:click={(e) => { e.stopPropagation(); selectElement(`project-${index}-component-${componentIndex}`); }}>
-            {#if isEditMode}
-              <input class="input input-bordered w-full max-w-xs" type="text" bind:value={component.title} placeholder="Component Title" />
-              <textarea class="textarea textarea-bordered w-full max-w-xs mt-2" bind:value={component.content} placeholder="Component Content"></textarea>
+          <div
+            id={`project-${index}-component-${componentIndex}`}
+            class="mt-4"
+            on:click={(e) => {
+              if ($mode === 'edit') {
+                e.stopPropagation();
+                selectElement(`project-${index}-component-${componentIndex}`);
+              }
+            }}
+            class:selected={$mode === 'edit' && $selectedElement === `project-${index}-component-${componentIndex}`}
+            style={$elementStyles[`project-${index}-component-${componentIndex}`]}
+          >
+            {#if $mode === 'edit'}
+              <!-- Input fields for editing component -->
+              <input
+                class="input input-bordered w-full max-w-xs"
+                type="text"
+                bind:value={component.title}
+                placeholder="Component Title"
+              />
+              <textarea
+                class="textarea textarea-bordered w-full max-w-xs mt-2"
+                bind:value={component.content}
+                placeholder="Component Content"
+              ></textarea>
             {:else}
+              <!-- Display fields for component -->
               <h3 class="text-lg font-semibold">{component.title}</h3>
               <p>{component.content}</p>
             {/if}
@@ -55,17 +91,7 @@
 </div>
 
 <style>
-  .highlight {
+  .selected {
     border: 2px solid blue;
-    animation: highlight-fade 4s forwards;
-  }
-
-  @keyframes highlight-fade {
-    from {
-      border: 2px solid blue;
-    }
-    to {
-      border: 2px solid transparent;
-    }
   }
 </style>

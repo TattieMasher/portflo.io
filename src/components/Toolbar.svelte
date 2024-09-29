@@ -1,10 +1,6 @@
 <script>
-  import { writable } from 'svelte/store';
+  import { mode } from '../stores/mode.js';
   import { createEventDispatcher } from 'svelte';
-  export let mode;
-  const setMode = (newMode) => {
-    mode.set(newMode);
-  };
 
   const dispatch = createEventDispatcher();
 
@@ -20,13 +16,13 @@
   <div class="flex-none space-x-2">
     <button
       class={`btn btn-outline ${$mode === 'edit' ? 'btn-info' : ''}`}
-      on:click={() => setMode('edit')}
+      on:click={() => mode.set('edit')}
     >
       Edit
     </button>
     <button
       class={`btn btn-outline ${$mode === 'preview' ? 'btn-info' : ''}`}
-      on:click={() => setMode('preview')}
+      on:click={() => mode.set('preview')}
     >
       Preview
     </button>

@@ -4,17 +4,10 @@
   import Toolbar from '../components/Toolbar.svelte';
   import Sidebar from '../components/Sidebar.svelte';
   import RightSidebar from '../components/RightSidebar.svelte';
-  import { writable, get } from 'svelte/store';
-  import { projects } from '../stores/projects.js'; // Import projects from the store
-  import { styles } from '../stores/styles.js';
-
-  let mode = writable('edit');
-  let selectedElement = writable(null);
-
-  const setSelectedElement = (element) => {
-    console.log('Selected Element:', element);
-    selectedElement.set(element);
-  };
+  import { get } from 'svelte/store';
+  import { projects } from '../stores/projects.js';
+  import { elementStyles } from '../stores/elementStyles.js';
+  import { mode } from '../stores/mode.js';
 
   let user = {
     full_name: 'John Doe',
@@ -23,68 +16,118 @@
       'https://upload.wikimedia.org/wikipedia/en/thumb/3/32/KilmarnockLogo.svg/1200px-KilmarnockLogo.svg.png',
   };
 
-  // Update functions to work with the projects store
   const addComponent = (projectIndex) => {
-    projects.update(proj => {
-      proj[projectIndex].components.push({
-        title: '',
-        content: '',
-        type: 'text',
-        style: ''
+    projects.update((proj) => {
+      const updatedProjects = proj.map((project, index) => {
+        if (index === projectIndex) {
+          return {
+            ...project,
+            components: [
+              ...project.components,
+              {
+                title: '',
+                content: '',
+                type: 'text',
+                style: '',
+              },
+            ],
+          };
+        }
+        return project;
       });
       console.log('Added component to project', projectIndex);
-      return proj;
+      return updatedProjects;
     });
   };
 
   const addProject = () => {
-    projects.update(proj => {
-      proj.push({
+    projects.update((proj) => [
+      ...proj,
+      {
         title: '',
         description: '',
         project_url: '#',
-        components: []
-      });
-      console.log('Added new project');
-      return proj;
-    });
+        components: [],
+      },
+    ]);
+    console.log('Added new project');
   };
 
   const moveComponentUp = (projectIndex, componentIndex) => {
-    projects.update(proj => {
-      const components = proj[projectIndex].components;
-      [components[componentIndex - 1], components[componentIndex]] = [components[componentIndex], components[componentIndex - 1]];
-      return proj;
+    projects.update((proj) => {
+      const updatedProjects = proj.map((project, index) => {
+        if (index === projectIndex && componentIndex > 0) {
+          const updatedComponents = [...project.components];
+          [updatedComponents[componentIndex - 1], updatedComponents[componentIndex]] = [
+            updatedComponents[componentIndex],
+            updatedComponents[componentIndex - 1],
+          ];
+          return {
+            ...project,
+            components: updatedComponents,
+          };
+        }
+        return project;
+      });
+      return updatedProjects;
     });
   };
 
   const moveComponentDown = (projectIndex, componentIndex) => {
-    projects.update(proj => {
-      const components = proj[projectIndex].components;
-      [components[componentIndex + 1], components[componentIndex]] = [components[componentIndex], components[componentIndex + 1]];
-      return proj;
+    projects.update((proj) => {
+      const updatedProjects = proj.map((project, index) => {
+        if (index === projectIndex && componentIndex < project.components.length - 1) {
+          const updatedComponents = [...project.components];
+          [updatedComponents[componentIndex], updatedComponents[componentIndex + 1]] = [
+            updatedComponents[componentIndex + 1],
+            updatedComponents[componentIndex],
+          ];
+          return {
+            ...project,
+            components: updatedComponents,
+          };
+        }
+        return project;
+      });
+      return updatedProjects;
     });
   };
 
   const moveProjectUp = (projectIndex) => {
-    projects.update(proj => {
-      [proj[projectIndex - 1], proj[projectIndex]] = [proj[projectIndex], proj[projectIndex - 1]];
+    projects.update((proj) => {
+      if (projectIndex > 0) {
+        const updatedProjects = [...proj];
+        [updatedProjects[projectIndex - 1], updatedProjects[projectIndex]] = [
+          updatedProjects[projectIndex],
+          updatedProjects[projectIndex - 1],
+        ];
+        return updatedProjects;
+      }
       return proj;
     });
   };
 
   const moveProjectDown = (projectIndex) => {
-    projects.update(proj => {
-      [proj[projectIndex + 1], proj[projectIndex]] = [proj[projectIndex], proj[projectIndex + 1]];
+    projects.update((proj) => {
+      if (projectIndex < proj.length - 1) {
+        const updatedProjects = [...proj];
+        [updatedProjects[projectIndex], updatedProjects[projectIndex + 1]] = [
+          updatedProjects[projectIndex + 1],
+          updatedProjects[projectIndex],
+        ];
+        return updatedProjects;
+      }
       return proj;
     });
   };
 
+
+  // TODO- send to live API when finished
   const saveData = async () => {
     const projectData = get(projects);
-    const stylesData = get(styles);
+    const stylesData = get(elementStyles);
     try {
-      const response = await fetch('https://your-api-endpoint.com/save', {
+      const response = await fetch('https://api-endpoint.com/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,25 +147,29 @@
 </script>
 
 <main class="flex flex-col h-screen">
-  <Toolbar {mode} on:save={saveData} class="w-full" />
+  <Toolbar on:save={saveData} class="w-full" />
   <div class="flex flex-1 overflow-hidden">
-    <Sidebar
-      {user}
-      {selectedElement}
-      {setSelectedElement}
-      {addComponent}
-      {addProject}
-      {moveComponentUp}
-      {moveComponentDown}
-      {moveProjectUp}
-      {moveProjectDown}
-      class="h-full"
-    />
+    {#if $mode === 'edit'}
+      <Sidebar
+        {user}
+        {addComponent}
+        {addProject}
+        {moveComponentUp}
+        {moveComponentDown}
+        {moveProjectUp}
+        {moveProjectDown}
+        class="h-full"
+      />
+    {/if}
+
     <div class="flex-1 flex flex-col overflow-y-auto p-6">
-      <UserProfile {user} isEditMode={$mode === 'edit'} selectedElement={$selectedElement} />
-      <ProjectList isEditMode={$mode === 'edit'} selectedElement={$selectedElement} {setSelectedElement} />
+      <UserProfile {user} />
+      <ProjectList />
     </div>
-    <RightSidebar {selectedElement} {setSelectedElement} class="h-full" />
+
+    {#if $mode === 'edit'}
+      <RightSidebar class="h-full" />
+    {/if}
   </div>
 </main>
 
