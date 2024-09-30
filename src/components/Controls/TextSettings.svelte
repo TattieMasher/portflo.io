@@ -13,11 +13,31 @@
   const updateFontSize = (size) => {
     const elementId = $selectedElement;
     if (elementId) {
+      elementStyles.update((styles) => {
+        const updatedStyles = {
+          ...styles,
+          [elementId]: {
+            ...styles[elementId],
+            fontSize: fontSizes[size],
+          },
+        };
+        console.log('Updated elementStyles:', updatedStyles);
+        return updatedStyles;
+      });
+    }
+  };
+
+
+  const alignments = ['left', 'center', 'right', 'justify'];
+
+  const updateAlignment = (alignment) => {
+    const elementId = $selectedElement;
+    if (elementId) {
       elementStyles.update((styles) => ({
         ...styles,
         [elementId]: {
           ...styles[elementId],
-          fontSize: fontSizes[size],
+          textAlign: alignment,
         },
       }));
     }
@@ -54,8 +74,20 @@
       <label for="alignment-control" class="label">
         <span class="label-text">Alignment</span>
       </label>
-      <!-- Alignment controls (implementation can be similar) -->
+      <div id="alignment-control" class="flex space-x-2">
+        {#each alignments as alignment}
+          <button
+            class="btn btn-outline btn-sm"
+            class:btn-active={$elementStyles[$selectedElement]?.textAlign === alignment}
+            on:click={() => updateAlignment(alignment)}
+            title={alignment.charAt(0).toUpperCase() + alignment.slice(1)}
+          >
+            <Icon icon={`radix-icons:text-align-${alignment}`} class="text-xl" />
+          </button>
+        {/each}
+      </div>
     </div>
+    <div class="divider"></div>
     <div class="form-control">
       <label for="text-color-control" class="label">
         <span class="label-text">Colour</span>

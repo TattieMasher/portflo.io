@@ -8,16 +8,33 @@
     selectedElement.set(element);
     console.log('Selected Element:', element);
   };
+
+  // Mapping js styles to CSS properties
+  const cssPropertyMap = {
+    backgroundColor: 'background-color',
+    fontSize: 'font-size',
+    textAlign: 'text-align',
+    color: 'color',
+  };
+
+  // Function to generate style string from styles object
+  const getStyleString = (styles) => {
+    if (!styles) return '';
+    return Object.entries(styles)
+      .map(([key, value]) => `${cssPropertyMap[key] || key}: ${value};`)
+      .join(' ');
+  };
 </script>
 
 <div class="grid grid-cols-1 gap-4">
   {#each $projects as project, index}
+    {#key $elementStyles[`project-${index}`]}
     <div
       id={`project-${index}`}
       class="card"
       on:click={$mode === 'edit' ? () => selectElement(`project-${index}`) : null}
       class:selected={$mode === 'edit' && $selectedElement === `project-${index}`}
-      style={$elementStyles[`project-${index}`]}
+      style={getStyleString($elementStyles[`project-${index}`])}
     >
       <div class="card-body">
         {#if $mode === 'edit'}
@@ -41,18 +58,27 @@
           ></textarea>
         {:else}
           <!-- Display fields for project -->
-          <h2 class="card-title">{project.title}</h2>
-          <p>{project.description}</p>
+          <h2
+            class="card-title"
+            style={getStyleString($elementStyles[`project-${index}`])}
+          >
+            {project.title}
+          </h2>
+          <p style={getStyleString($elementStyles[`project-${index}`])}>
+            {project.description}
+          </p>
           <a
             href={project.project_url}
             target="_blank"
             class="text-blue-600 hover:underline"
+            style={getStyleString($elementStyles[`project-${index}`])}
           >
             View Project
           </a>
         {/if}
 
         {#each project.components as component, componentIndex}
+          {#key $elementStyles[`project-${index}-component-${componentIndex}`]}
           <div
             id={`project-${index}-component-${componentIndex}`}
             class="mt-4"
@@ -62,8 +88,14 @@
                 selectElement(`project-${index}-component-${componentIndex}`);
               }
             }}
-            class:selected={$mode === 'edit' && $selectedElement === `project-${index}-component-${componentIndex}`}
-            style={$elementStyles[`project-${index}-component-${componentIndex}`]}
+            class:selected={
+              $mode === 'edit' &&
+              $selectedElement === `project-${index}-component-${componentIndex}`
+            }
+            style={getStyleString({
+              ...$elementStyles[`project-${index}`],
+              ...$elementStyles[`project-${index}-component-${componentIndex}`],
+            })}
           >
             {#if $mode === 'edit'}
               <!-- Input fields for editing component -->
@@ -80,13 +112,30 @@
               ></textarea>
             {:else}
               <!-- Display fields for component -->
-              <h3 class="text-lg font-semibold">{component.title}</h3>
-              <p>{component.content}</p>
+              <h3
+                class="text-lg font-semibold"
+                style={getStyleString({
+                  ...$elementStyles[`project-${index}`],
+                  ...$elementStyles[`project-${index}-component-${componentIndex}`],
+                })}
+              >
+                {component.title}
+              </h3>
+              <p
+                style={getStyleString({
+                  ...$elementStyles[`project-${index}`],
+                  ...$elementStyles[`project-${index}-component-${componentIndex}`],
+                })}
+              >
+                {component.content}
+              </p>
             {/if}
           </div>
+          {/key}
         {/each}
       </div>
     </div>
+    {/key}
   {/each}
 </div>
 
