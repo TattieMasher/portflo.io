@@ -1,6 +1,8 @@
+<!-- components/ProjectList.svelte -->
 <script>
   import { projects } from '../stores/projects.js';
   import { selectedElement } from '../stores/selectedElement.js';
+  import { selectedElementStyles } from '../stores/selectedElementStyles.js';
   import { elementStyles } from '../stores/elementStyles.js';
   import { mode } from '../stores/mode.js';
 

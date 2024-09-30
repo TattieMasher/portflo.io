@@ -1,6 +1,8 @@
+<!-- components/UserProfile.svelte -->
 <script>
   import { selectedElement } from '../stores/selectedElement.js';
   import { elementStyles } from '../stores/elementStyles.js';
+  import { selectedElementStyles } from '../stores/selectedElementStyles.js';
   import { mode } from '../stores/mode.js';
 
   export let user;
@@ -8,16 +10,32 @@
   const selectElement = () => {
     selectedElement.set('user');
   };
+
+  // Mapping js styles to CSS properties
+  const cssPropertyMap = {
+    backgroundColor: 'background-color',
+    fontSize: 'font-size',
+    textAlign: 'text-align',
+    color: 'color',
+  };
+
+  // Function to generate style string from styles object
+  const getStyleString = (styles) => {
+    if (!styles) return '';
+    return Object.entries(styles)
+      .map(([key, value]) => `${cssPropertyMap[key] || key}: ${value};`)
+      .join(' ');
+  };
 </script>
 
 <svelte:head>
-  <title>{user.full_name} | Portflo.io</title> 
-</svelte:head> 
+  <title>{user.full_name} | Portflo.io</title>
+</svelte:head>
 
 <div
   id="user"
   class="card"
-  style={$elementStyles['user']}
+  style={getStyleString($selectedElement === 'user' ? $selectedElementStyles : $elementStyles['user'])}
   on:click={$mode === 'edit' ? selectElement : null}
   class:selected={$mode === 'edit' && $selectedElement === 'user'}
 >
@@ -33,15 +51,17 @@
         </div>
         <input type="file" class="file-input file-input-bordered w-full max-w-xs" />
         <div class="label"></div>
-      </label>    
+      </label>
 
       <input class="input input-bordered w-full max-w-xs" type="text" bind:value={user.full_name} />
       <textarea class="textarea textarea-bordered w-full max-w-xs mt-2" bind:value={user.bio}></textarea>
     {:else}
-      <h2 class="card-title">{user.full_name}</h2>
-      <p>{user.bio}</p>
+      <h2 class="card-title" style={getStyleString($selectedElementStyles)}>
+        {user.full_name}
+      </h2>
+      <p style={getStyleString($selectedElementStyles)}>{user.bio}</p>
     {/if}
-    <div class="divider"></div> 
+    <div class="divider"></div>
   </div>
 </div>
 

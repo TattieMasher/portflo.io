@@ -1,12 +1,12 @@
+<!-- components/Controls/BackgroundSettings.svelte -->
 <script>
   import { elementStyles } from '../../stores/elementStyles.js';
   import { selectedElement } from '../../stores/selectedElement.js';
+  import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
 
   let isTransparent = false;
 
-  $: if ($selectedElement && $elementStyles[$selectedElement]) {
-    isTransparent = $elementStyles[$selectedElement].backgroundColor === 'transparent';
-  }
+  $: isTransparent = $selectedElementStyles.backgroundColor === 'transparent';
 
   const toggleTransparency = () => {
     const elementId = $selectedElement;
@@ -48,7 +48,7 @@
           id="background-color-control"
           type="color"
           class="input input-bordered"
-          value={$elementStyles[$selectedElement]?.backgroundColor || '#ffffff'}
+          value={$selectedElementStyles.backgroundColor || '#ffffff'}
           on:input={(e) => {
             const elementId = $selectedElement;
             if (elementId) {

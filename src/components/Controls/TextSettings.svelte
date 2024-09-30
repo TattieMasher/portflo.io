@@ -1,7 +1,9 @@
+<!-- components/Controls/TextSettings.svelte -->
 <script>
   import Icon from '@iconify/svelte';
   import { elementStyles } from '../../stores/elementStyles.js';
   import { selectedElement } from '../../stores/selectedElement.js';
+  import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
 
   const fontSizes = {
     Small: '12px',
@@ -21,12 +23,10 @@
             fontSize: fontSizes[size],
           },
         };
-        console.log('Updated elementStyles:', updatedStyles);
         return updatedStyles;
       });
     }
   };
-
 
   const alignments = ['left', 'center', 'right', 'justify'];
 
@@ -61,7 +61,7 @@
               type="radio"
               name="font-size"
               value={fontSizes[size]}
-              checked={$elementStyles[$selectedElement]?.fontSize === fontSizes[size]}
+              checked={$selectedElementStyles.fontSize === fontSizes[size]}
               on:change={() => updateFontSize(size)}
             />
             <span class="ml-2">{size}</span>
@@ -78,7 +78,7 @@
         {#each alignments as alignment}
           <button
             class="btn btn-outline btn-sm"
-            class:btn-active={$elementStyles[$selectedElement]?.textAlign === alignment}
+            class:btn-active={$selectedElementStyles.textAlign === alignment}
             on:click={() => updateAlignment(alignment)}
             title={alignment.charAt(0).toUpperCase() + alignment.slice(1)}
           >
@@ -96,7 +96,7 @@
         id="text-color-control"
         type="color"
         class="input input-bordered"
-        value={$elementStyles[$selectedElement]?.color || '#000000'}
+        value={$selectedElementStyles.color || '#000000'}
         on:input={(e) => {
           const elementId = $selectedElement;
           if (elementId) {
