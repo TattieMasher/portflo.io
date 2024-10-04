@@ -19,10 +19,18 @@
     color: 'color',
   };
 
+  // Default styles
+  const defaultStyles = {
+    backgroundColor: 'transparent',
+    fontSize: '16px',
+    textAlign: 'left',
+    color: '#ffffff',
+  };
+
   // Function to generate style string from styles object
   const getStyleString = (styles) => {
-    if (!styles) return '';
-    return Object.entries(styles)
+    const combinedStyles = { ...defaultStyles, ...styles };
+    return Object.entries(combinedStyles)
       .map(([key, value]) => `${cssPropertyMap[key] || key}: ${value};`)
       .join(' ');
   };

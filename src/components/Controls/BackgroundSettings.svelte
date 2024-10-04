@@ -6,7 +6,8 @@
 
   let isTransparent = false;
 
-  $: isTransparent = $selectedElementStyles.backgroundColor === 'transparent';
+  // Reactive statement to update isTransparent based on backgroundColor
+  $: isTransparent = !$selectedElementStyles.backgroundColor || $selectedElementStyles.backgroundColor === 'transparent';
 
   const toggleTransparency = () => {
     const elementId = $selectedElement;
@@ -42,7 +43,7 @@
       </div>
       {#if !isTransparent}
         <label for="background-color-control" class="label">
-          <span class="label-text">Background Colour</span>
+          <span class="label-text">Background Color</span>
         </label>
         <input
           id="background-color-control"

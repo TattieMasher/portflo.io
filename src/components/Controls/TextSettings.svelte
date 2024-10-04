@@ -12,23 +12,40 @@
     XL: '24px',
   };
 
+  const defaultFontSize = '16px'; // Medium size - TODO?
+
+  // Function to get the current font size label
+  const getCurrentFontSizeLabel = () => {
+    const currentFontSize = $selectedElementStyles.fontSize || defaultFontSize;
+    return Object.keys(fontSizes).find((key) => fontSizes[key] === currentFontSize);
+  };
+
+  // Reactive variable for the selected font size
+  let selectedFontSize = getCurrentFontSizeLabel();
+
+  $: selectedFontSize = getCurrentFontSizeLabel();
+
   const updateFontSize = (size) => {
     const elementId = $selectedElement;
     if (elementId) {
       elementStyles.update((styles) => {
-        const updatedStyles = {
+        return {
           ...styles,
           [elementId]: {
             ...styles[elementId],
             fontSize: fontSizes[size],
           },
         };
-        return updatedStyles;
       });
     }
   };
 
   const alignments = ['left', 'center', 'right', 'justify'];
+
+  // Reactive variable for the selected alignment
+  let selectedAlignment = $selectedElementStyles.textAlign || 'left';
+
+  $: selectedAlignment = $selectedElementStyles.textAlign || 'left';
 
   const updateAlignment = (alignment) => {
     const elementId = $selectedElement;
@@ -61,7 +78,7 @@
               type="radio"
               name="font-size"
               value={fontSizes[size]}
-              checked={$selectedElementStyles.fontSize === fontSizes[size]}
+              bind:group={selectedFontSize}
               on:change={() => updateFontSize(size)}
             />
             <span class="ml-2">{size}</span>
@@ -78,7 +95,7 @@
         {#each alignments as alignment}
           <button
             class="btn btn-outline btn-sm"
-            class:btn-active={$selectedElementStyles.textAlign === alignment}
+            class:btn-active={selectedAlignment === alignment}
             on:click={() => updateAlignment(alignment)}
             title={alignment.charAt(0).toUpperCase() + alignment.slice(1)}
           >
@@ -90,7 +107,7 @@
     <div class="divider"></div>
     <div class="form-control">
       <label for="text-color-control" class="label">
-        <span class="label-text">Colour</span>
+        <span class="label-text">Color</span>
       </label>
       <input
         id="text-color-control"
