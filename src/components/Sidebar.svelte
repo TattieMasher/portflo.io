@@ -2,13 +2,20 @@
   import { projects } from '../stores/projects.js';
   import { selectedElement } from '../stores/selectedElement.js';
 
-  export let user;
   export let addComponent;
   export let addProject;
   export let moveComponentUp;
   export let moveComponentDown;
   export let moveProjectUp;
   export let moveProjectDown;
+
+  const selectPortfolio = () => {
+    selectedElement.set('portfolio');
+    const portfolioElement = document.getElementById('portfolio'); // TODO, make this work
+    if (portfolioElement) {
+      portfolioElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   const selectUser = () => {
     selectedElement.set('user');
@@ -42,10 +49,6 @@
 
   const handleAddProject = () => {
     addProject();
-  };
-
-  const selectPortfolio = () => {
-    selectedElement.set('portfolio');
   };
 </script>
 

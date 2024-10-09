@@ -155,7 +155,7 @@
       />
     {/if}
 
-    <div class="flex-1 flex flex-col overflow-y-auto p-6">
+    <div class="portfolio flex-1 flex flex-col overflow-y-auto p-6">
       <UserProfile />
       <div class="divider"></div>
       <ProjectList />
