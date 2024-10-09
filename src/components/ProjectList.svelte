@@ -4,34 +4,11 @@
   import { selectedElementStyles } from '../stores/selectedElementStyles.js';
   import { elementStyles } from '../stores/elementStyles.js';
   import { mode } from '../stores/mode.js';
+  import { getStyleString } from '../utils/styleUtils.js';
 
   const selectElement = (element) => {
     selectedElement.set(element);
     console.log('Selected Element:', element);
-  };
-
-  // Mapping js styles to CSS properties
-  const cssPropertyMap = {
-    backgroundColor: 'background-color',
-    fontSize: 'font-size',
-    textAlign: 'text-align',
-    color: 'color',
-  };
-
-  // Default styles
-  const defaultStyles = {
-    backgroundColor: 'transparent',
-    fontSize: '16px',
-    textAlign: 'left',
-    color: '#ffffff',
-  };
-
-  // Function to generate style string from styles object
-  const getStyleString = (styles) => {
-    const combinedStyles = { ...defaultStyles, ...styles };
-    return Object.entries(combinedStyles)
-      .map(([key, value]) => `${cssPropertyMap[key] || key}: ${value};`)
-      .join(' ');
   };
 </script>
 

@@ -3,6 +3,7 @@
   import { elementStyles } from '../stores/elementStyles.js';
   import { selectedElementStyles } from '../stores/selectedElementStyles.js';
   import { mode } from '../stores/mode.js';
+  import { getStyleString } from '../utils/styleUtils.js';
   import Icon from '@iconify/svelte';
 
   export let user;
@@ -10,30 +11,6 @@
   const selectElement = () => {
     selectedElement.set('user');
     console.log('User Profile selected, selectedElement set to:', 'user');
-  };
-
-  // Mapping JS styles to CSS properties
-  const cssPropertyMap = {
-    backgroundColor: 'background-color',
-    fontSize: 'font-size',
-    textAlign: 'text-align',
-    color: 'color',
-  };
-
-  // Default styles
-  const defaultStyles = {
-    backgroundColor: 'transparent',
-    fontSize: '16px',
-    textAlign: 'left',
-    color: '#ffffff',
-  };
-
-  // Function to generate style string from styles object
-  const getStyleString = (styles) => {
-    const combinedStyles = { ...defaultStyles, ...styles };
-    return Object.entries(combinedStyles)
-      .map(([key, value]) => `${cssPropertyMap[key] || key}: ${value};`)
-      .join(' ');
   };
 
   // For adding new skills
