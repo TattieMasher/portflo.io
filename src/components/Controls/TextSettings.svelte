@@ -1,4 +1,3 @@
-<!-- components/Controls/TextSettings.svelte -->
 <script>
   import Icon from '@iconify/svelte';
   import { elementStyles } from '../../stores/elementStyles.js';

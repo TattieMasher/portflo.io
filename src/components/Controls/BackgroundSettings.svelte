@@ -1,4 +1,3 @@
-<!-- components/Controls/BackgroundSettings.svelte -->
 <script>
   import { elementStyles } from '../../stores/elementStyles.js';
   import { selectedElement } from '../../stores/selectedElement.js';

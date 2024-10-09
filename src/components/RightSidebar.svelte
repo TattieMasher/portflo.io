@@ -1,6 +1,7 @@
 <script>
   import TextSettings from './Controls/TextSettings.svelte';
   import BackgroundSettings from './Controls/BackgroundSettings.svelte';
+  import BadgeSettings from './Controls/BadgeSettings.svelte';
   import { selectedElement } from '../stores/selectedElement.js';
 </script>
 
@@ -10,6 +11,9 @@
     {#if $selectedElement}
       <TextSettings />
       <BackgroundSettings />
+      {#if $selectedElement === 'user'}
+        <BadgeSettings />
+      {/if}
     {/if}
   </ul>
 </aside>
