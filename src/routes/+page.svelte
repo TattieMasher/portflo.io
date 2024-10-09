@@ -165,6 +165,7 @@
 
     <div class="flex-1 flex flex-col overflow-y-auto p-6">
       <UserProfile {user} />
+      <div class="divider"></div>
       <ProjectList />
     </div>
 
