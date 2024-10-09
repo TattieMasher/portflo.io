@@ -17,13 +17,12 @@
     const elementId = $selectedElement;
     if (elementId) {
       elementStyles.update((styles) => {
-        return {
-          ...styles,
-          [elementId]: {
-            ...styles[elementId],
-            badgeClass,
-          },
-        };
+        const updatedStyles = { ...styles };
+        if (!updatedStyles[elementId]) {
+          updatedStyles[elementId] = {};
+        }
+        updatedStyles[elementId].badgeClass = badgeClass;
+        return updatedStyles;
       });
     }
   };
@@ -35,15 +34,6 @@
     Badge Settings
   </label>
   <div class="collapse-content">
-    <div class="form-control">
-      <label class="cursor-pointer label">
-        <span class="label-text">Transparent</span> <!-- TODO? -->
-        <input
-          type="checkbox"
-          class="checkbox checkbox-info"
-        />
-      </label>
-    </div>
     <div class="form-control">
       <label class="label">
         <span class="label-text">Badge Theme</span>

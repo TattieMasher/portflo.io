@@ -8,14 +8,7 @@
   import { projects } from '../stores/projects.js';
   import { elementStyles } from '../stores/elementStyles.js';
   import { mode } from '../stores/mode.js';
-
-  let user = {
-    full_name: 'John Doe',
-    bio: 'A passionate developer.',
-    profile_picture:
-      'https://upload.wikimedia.org/wikipedia/en/thumb/3/32/KilmarnockLogo.svg/1200px-KilmarnockLogo.svg.png',
-    skills: ['HTML', 'JavaScript', 'CSS'], // Added skills
-  };
+  import { user } from '../stores/user.js';
 
   const addComponent = (projectIndex) => {
     projects.update((proj) => {
@@ -122,19 +115,19 @@
     });
   };
 
-
-  // TODO- send to live API when finished
+  // Update saveData function to get user data from the store
   const saveData = async () => {
     const projectData = get(projects);
     const stylesData = get(elementStyles);
+    const userData = get(user); // Get user data from the store
     try {
-      const response = await fetch('https://api-endpoint.com/save', {
+      const response = await fetch('https://api-endpoint.com/save', { // TODO, make API lol
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user,
+          user: userData,
           projects: projectData,
           styles: stylesData,
         }),
@@ -152,7 +145,6 @@
   <div class="flex flex-1 overflow-hidden">
     {#if $mode === 'edit'}
       <Sidebar
-        {user}
         {addComponent}
         {addProject}
         {moveComponentUp}
@@ -164,7 +156,7 @@
     {/if}
 
     <div class="flex-1 flex flex-col overflow-y-auto p-6">
-      <UserProfile {user} />
+      <UserProfile />
       <div class="divider"></div>
       <ProjectList />
     </div>

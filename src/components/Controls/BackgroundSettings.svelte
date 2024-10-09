@@ -11,13 +11,14 @@
   const toggleTransparency = () => {
     const elementId = $selectedElement;
     if (elementId) {
-      elementStyles.update((styles) => ({
-        ...styles,
-        [elementId]: {
-          ...styles[elementId],
-          backgroundColor: isTransparent ? '#ffffff' : 'transparent',
-        },
-      }));
+      elementStyles.update((styles) => {
+        const updatedStyles = { ...styles };
+        if (!updatedStyles[elementId]) {
+          updatedStyles[elementId] = {};
+        }
+        updatedStyles[elementId].backgroundColor = isTransparent ? '#ffffff' : 'transparent';
+        return updatedStyles;
+      });
     }
   };
 </script>
@@ -52,13 +53,14 @@
           on:input={(e) => {
             const elementId = $selectedElement;
             if (elementId) {
-              elementStyles.update((styles) => ({
-                ...styles,
-                [elementId]: {
-                  ...styles[elementId],
-                  backgroundColor: e.target.value,
-                },
-              }));
+              elementStyles.update((styles) => {
+                const updatedStyles = { ...styles };
+                if (!updatedStyles[elementId]) {
+                  updatedStyles[elementId] = {};
+                }
+                updatedStyles[elementId].backgroundColor = e.target.value;
+                return updatedStyles;
+              });
             }
           }}
         />

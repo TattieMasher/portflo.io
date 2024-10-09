@@ -11,7 +11,7 @@
     XL: '24px',
   };
 
-  const defaultFontSize = '16px'; // Medium size - TODO?
+  const defaultFontSize = '16px'; // Medium size
 
   // Function to get the current font size label
   const getCurrentFontSizeLabel = () => {
@@ -28,13 +28,12 @@
     const elementId = $selectedElement;
     if (elementId) {
       elementStyles.update((styles) => {
-        return {
-          ...styles,
-          [elementId]: {
-            ...styles[elementId],
-            fontSize: fontSizes[size],
-          },
-        };
+        const updatedStyles = { ...styles };
+        if (!updatedStyles[elementId]) {
+          updatedStyles[elementId] = {};
+        }
+        updatedStyles[elementId].fontSize = fontSizes[size];
+        return updatedStyles;
       });
     }
   };
@@ -49,13 +48,14 @@
   const updateAlignment = (alignment) => {
     const elementId = $selectedElement;
     if (elementId) {
-      elementStyles.update((styles) => ({
-        ...styles,
-        [elementId]: {
-          ...styles[elementId],
-          textAlign: alignment,
-        },
-      }));
+      elementStyles.update((styles) => {
+        const updatedStyles = { ...styles };
+        if (!updatedStyles[elementId]) {
+          updatedStyles[elementId] = {};
+        }
+        updatedStyles[elementId].textAlign = alignment;
+        return updatedStyles;
+      });
     }
   };
 </script>
@@ -116,13 +116,14 @@
         on:input={(e) => {
           const elementId = $selectedElement;
           if (elementId) {
-            elementStyles.update((styles) => ({
-              ...styles,
-              [elementId]: {
-                ...styles[elementId],
-                color: e.target.value,
-              },
-            }));
+            elementStyles.update((styles) => {
+              const updatedStyles = { ...styles };
+              if (!updatedStyles[elementId]) {
+                updatedStyles[elementId] = {};
+              }
+              updatedStyles[elementId].color = e.target.value;
+              return updatedStyles;
+            });
           }
         }}
       />
