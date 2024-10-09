@@ -5,6 +5,7 @@ export const projects = writable([
     title: 'Project 1',
     description: 'Description of project 1',
     project_url: '#',
+    layout: 'default',
     components: [
       {
         title: 'Component 1.1',
@@ -18,12 +19,23 @@ export const projects = writable([
         type: 'image',
         style: 'border p-4 rounded bg-red-100',
       },
+      {
+        title: 'Component 1.3',
+        images: [
+          'https://via.placeholder.com/300x200?text=Slide+1',
+          'https://via.placeholder.com/300x200?text=Slide+2',
+          'https://via.placeholder.com/300x200?text=Slide+3',
+        ],
+        type: 'carousel',
+        style: '',
+      },
     ],
   },
   {
     title: 'Project 2',
     description: 'Description of project 2',
     project_url: '#',
+    layout: 'default',
     components: [
       {
         title: 'Component 2.1',

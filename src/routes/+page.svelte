@@ -21,7 +21,7 @@
               {
                 title: '',
                 content: '',
-                type: 'text',
+                type: 'text', // Default type is 'text'
                 style: '',
               },
             ],
@@ -41,12 +41,14 @@
         title: '',
         description: '',
         project_url: '#',
+        layout: 'default', // Initialize layout
         components: [],
       },
     ]);
     console.log('Added new project');
   };
 
+  // Define the missing functions
   const moveComponentUp = (projectIndex, componentIndex) => {
     projects.update((proj) => {
       const updatedProjects = proj.map((project, index) => {
@@ -115,13 +117,12 @@
     });
   };
 
-  // Update saveData function to get user data from the store
   const saveData = async () => {
     const projectData = get(projects);
     const stylesData = get(elementStyles);
     const userData = get(user); // Get user data from the store
     try {
-      const response = await fetch('https://api-endpoint.com/save', { // TODO, make API lol
+      const response = await fetch('https://api-endpoint.com/save', { // Replace with your API endpoint
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
