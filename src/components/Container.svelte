@@ -5,6 +5,7 @@
   import { elementStyles } from '../stores/elementStyles.js';
   import { mode } from '../stores/mode.js';
   import { getStyleString } from '../utils/styleUtils.js';
+  import { projects } from '../stores/projects.js';
 
   export let container;
   export let containerIndex;
@@ -18,10 +19,38 @@
   // Available layout options for containers
   const layoutOptions = ['article', 'grid', 'carousel', 'timeline'];
 
-  // Set default layout if not specified
-  $: if (!container.layout) {
-    container.layout = 'article';
+  // Local variable for layout
+  let layout = container.layout || 'article';
+
+  // Watch for changes in container.layout
+  $: if (layout !== container.layout) {
+    layout = container.layout;
   }
+
+  const updateContainerLayout = (event) => {
+    const newLayout = event.target.value;
+    projects.update((proj) => {
+      const updatedProjects = proj.map((project, idx) => {
+        if (idx === projectIndex) {
+          const updatedContainers = project.containers.map((containerItem, cIdx) => {
+            if (cIdx === containerIndex) {
+              return {
+                ...containerItem,
+                layout: newLayout,
+              };
+            }
+            return containerItem;
+          });
+          return {
+            ...project,
+            containers: updatedContainers,
+          };
+        }
+        return project;
+      });
+      return updatedProjects;
+    });
+  };
 </script>
 
 <div
@@ -46,7 +75,11 @@
       <label class="label">
         <span class="label-text">Container Layout</span>
       </label>
-      <select class="select select-bordered" bind:value={container.layout}>
+      <select
+        class="select select-bordered"
+        bind:value={layout}
+        on:change={updateContainerLayout}
+      >
         {#each layoutOptions as option}
           <option value={option}>{option.charAt(0).toUpperCase() + option.slice(1)}</option>
         {/each}

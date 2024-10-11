@@ -5,6 +5,7 @@
   import { elementStyles } from '../stores/elementStyles.js';
   import { mode } from '../stores/mode.js';
   import { getStyleString } from '../utils/styleUtils.js';
+  import { projects } from '../stores/projects.js';
 
   export let project;
   export let projectIndex;
@@ -12,6 +13,49 @@
   const selectElement = () => {
     selectedElement.set(`project-${projectIndex}`);
     console.log('Selected Element:', `project-${projectIndex}`);
+  };
+
+  // Local variables for project properties
+  let projectTitle = project.title;
+  let projectDescription = project.description;
+  let projectURL = project.project_url;
+
+  // Watch for changes in project properties
+  $: if (projectTitle !== project.title) {
+    projectTitle = project.title;
+  }
+  $: if (projectDescription !== project.description) {
+    projectDescription = project.description;
+  }
+  $: if (projectURL !== project.project_url) {
+    projectURL = project.project_url;
+  }
+
+  const updateProject = (changes) => {
+    projects.update((proj) => {
+      const updatedProjects = proj.map((projItem, idx) => {
+        if (idx === projectIndex) {
+          return {
+            ...projItem,
+            ...changes,
+          };
+        }
+        return projItem;
+      });
+      return updatedProjects;
+    });
+  };
+
+  const handleTitleChange = (event) => {
+    updateProject({ title: event.target.value });
+  };
+
+  const handleDescriptionChange = (event) => {
+    updateProject({ description: event.target.value });
+  };
+
+  const handleURLChange = (event) => {
+    updateProject({ project_url: event.target.value });
   };
 </script>
 
@@ -38,7 +82,8 @@
           <input
             class="input input-bordered w-full"
             type="text"
-            bind:value={project.title}
+            bind:value={projectTitle}
+            on:input={handleTitleChange}
             placeholder="Project Title"
           />
           <label class="label">
@@ -46,7 +91,8 @@
           </label>
           <textarea
             class="textarea textarea-bordered w-full mt-2"
-            bind:value={project.description}
+            bind:value={projectDescription}
+            on:input={handleDescriptionChange}
             placeholder="Project Description"
           ></textarea>
         </div>
@@ -58,7 +104,8 @@
           <input
             class="input input-bordered w-full"
             type="text"
-            bind:value={project.project_url}
+            bind:value={projectURL}
+            on:input={handleURLChange}
             placeholder="Project URL"
           />
         </div>

@@ -11,6 +11,35 @@
   export let projectIndex;
   export let containerIndex;
 
+  // Local copies of component properties
+  let componentType = component.type;
+  let componentTitle = component.title;
+  let componentContent = component.content;
+
+  // Watch for changes in component to update local variables
+  $: if (componentType !== component.type) {
+    componentType = component.type;
+  }
+  $: if (componentTitle !== component.title) {
+    componentTitle = component.title;
+  }
+  $: if (componentContent !== component.content) {
+    componentContent = component.content;
+  }
+
+  // Update functions
+  function handleTypeChange(event) {
+    updateComponent({ type: event.target.value });
+  }
+
+  function handleTitleChange(event) {
+    updateComponent({ title: event.target.value });
+  }
+
+  function handleContentChange(event) {
+    updateComponent({ content: event.target.value });
+  }
+
   const selectElement = () => {
     selectedElement.set(`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
     console.log('Selected Element:', `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
@@ -21,36 +50,7 @@
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        projects.update((proj) => {
-          const updatedProjects = proj.map((project, idx) => {
-            if (idx === projectIndex) {
-              const updatedContainers = project.containers.map((container, cIdx) => {
-                if (cIdx === containerIndex) {
-                  const updatedComponents = container.components.map((comp, compIdx) => {
-                    if (compIdx === componentIndex) {
-                      return {
-                        ...comp,
-                        content: e.target.result,
-                      };
-                    }
-                    return comp;
-                  });
-                  return {
-                    ...container,
-                    components: updatedComponents,
-                  };
-                }
-                return container;
-              });
-              return {
-                ...project,
-                containers: updatedContainers,
-              };
-            }
-            return project;
-          });
-          return updatedProjects;
-        });
+        updateComponent({ content: e.target.result });
       };
       reader.readAsDataURL(file);
     }
@@ -68,38 +68,43 @@
           });
         })
       ).then((images) => {
-        projects.update((proj) => {
-          const updatedProjects = proj.map((project, idx) => {
-            if (idx === projectIndex) {
-              const updatedContainers = project.containers.map((container, cIdx) => {
-                if (cIdx === containerIndex) {
-                  const updatedComponents = container.components.map((comp, compIdx) => {
-                    if (compIdx === componentIndex) {
-                      return {
-                        ...comp,
-                        images: images,
-                      };
-                    }
-                    return comp;
-                  });
-                  return {
-                    ...container,
-                    components: updatedComponents,
-                  };
-                }
-                return container;
-              });
-              return {
-                ...project,
-                containers: updatedContainers,
-              };
-            }
-            return project;
-          });
-          return updatedProjects;
-        });
+        updateComponent({ images });
       });
     }
+  };
+
+  // Function to update the component in the projects store
+  const updateComponent = (changes) => {
+    projects.update((proj) => {
+      const updatedProjects = proj.map((project, idx) => {
+        if (idx === projectIndex) {
+          const updatedContainers = project.containers.map((container, cIdx) => {
+            if (cIdx === containerIndex) {
+              const updatedComponents = container.components.map((comp, compIdx) => {
+                if (compIdx === componentIndex) {
+                  return {
+                    ...comp,
+                    ...changes,
+                  };
+                }
+                return comp;
+              });
+              return {
+                ...container,
+                components: updatedComponents,
+              };
+            }
+            return container;
+          });
+          return {
+            ...project,
+            containers: updatedContainers,
+          };
+        }
+        return project;
+      });
+      return updatedProjects;
+    });
   };
 </script>
 
@@ -125,7 +130,11 @@
       <label class="label">
         <span class="label-text">Component Type</span>
       </label>
-      <select class="select select-bordered" bind:value={component.type}>
+      <select
+        class="select select-bordered"
+        bind:value={componentType}
+        on:change={handleTypeChange}
+      >
         <option value="text">Text</option>
         <option value="image">Image</option>
         <option value="carousel">Carousel</option>
@@ -138,12 +147,14 @@
       <input
         class="input input-bordered w-full max-w-xs mt-2"
         type="text"
-        bind:value={component.title}
+        bind:value={componentTitle}
+        on:input={handleTitleChange}
         placeholder="Component Title"
       />
       <textarea
         class="textarea textarea-bordered w-full max-w-xs mt-2"
-        bind:value={component.content}
+        bind:value={componentContent}
+        on:input={handleContentChange}
         placeholder="Component Content"
       ></textarea>
     {:else if component.type === 'image'}

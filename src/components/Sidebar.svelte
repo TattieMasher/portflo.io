@@ -88,7 +88,7 @@
         User Profile
       </button>
     </li>
-    {#each $projects as project, projectIndex}
+    {#each $projects as project, projectIndex (projectIndex)}
       <li class="menu-title mt-4">
         <div class="flex justify-between items-center">
           <span
@@ -124,7 +124,7 @@
         </div>
       </li>
       <ul class="ml-4 space-y-2">
-        {#each project.containers as container, containerIndex}
+        {#each project.containers as container, containerIndex (containerIndex)}
           <li class="menu-title mt-2">
             <div class="flex justify-between items-center">
               <span
@@ -160,7 +160,7 @@
             </div>
           </li>
           <ul class="ml-4 space-y-1">
-            {#each container.components as component, componentIndex}
+            {#each container.components as component, componentIndex (componentIndex)}
               <li class="flex justify-between items-center">
                 <div class="flex justify-between items-center">
                   <a
@@ -168,7 +168,7 @@
                     class="cursor-pointer"
                     class:bg-gray-700={$selectedElement === `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
                   >
-                    {component.title || 'Untitled Component'}
+                    {component.title || 'Untitled Component'} ({component.type})
                   </a>
                   <div class="flex">
                     {#if componentIndex > 0}
