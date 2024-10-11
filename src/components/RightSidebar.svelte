@@ -34,7 +34,7 @@
 
 <aside class="menu p-4 w-80 bg-gray-800 text-white h-full overflow-y-auto">
   <ul class="space-y-4">
-    <li class="menu-title"><span class="text-xl font-semibold">{selectedComponentType} Style Settings</span></li>
+    <li class="menu-title"><span class="text-xl font-semibold" style="text-transform: capitalize">{selectedComponentType} Style Settings</span></li>
     {#if $selectedElement}
       <!-- Include TextSettings for text components -->
       {#if selectedComponentType === 'text' || $selectedElement === 'user'}
