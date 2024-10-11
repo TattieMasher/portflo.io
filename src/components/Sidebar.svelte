@@ -2,10 +2,13 @@
   import { projects } from '../stores/projects.js';
   import { selectedElement } from '../stores/selectedElement.js';
 
+  export let addContainer;
   export let addComponent;
   export let addProject;
   export let moveComponentUp;
   export let moveComponentDown;
+  export let moveContainerUp;
+  export let moveContainerDown;
   export let moveProjectUp;
   export let moveProjectDown;
 
@@ -35,16 +38,28 @@
     }
   };
 
-  const selectComponent = (projectIndex, componentIndex) => {
-    selectedElement.set(`project-${projectIndex}-component-${componentIndex}`);
-    const componentElement = document.getElementById(`project-${projectIndex}-component-${componentIndex}`);
+  const selectContainer = (projectIndex, containerIndex) => {
+    selectedElement.set(`project-${projectIndex}-container-${containerIndex}`);
+    const containerElement = document.getElementById(`project-${projectIndex}-container-${containerIndex}`);
+    if (containerElement) {
+      containerElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  const selectComponent = (projectIndex, containerIndex, componentIndex) => {
+    selectedElement.set(`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
+    const componentElement = document.getElementById(`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
     if (componentElement) {
       componentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
 
-  const handleAddComponent = (projectIndex) => {
-    addComponent(projectIndex);
+  const handleAddContainer = (projectIndex) => {
+    addContainer(projectIndex);
+  };
+
+  const handleAddComponent = (projectIndex, containerIndex) => {
+    addComponent(projectIndex, containerIndex);
   };
 
   const handleAddProject = () => {
@@ -109,34 +124,33 @@
         </div>
       </li>
       <ul class="ml-4 space-y-2">
-        {#each project.components as component, componentIndex}
-          <li class="flex justify-between items-center">
+        {#each project.containers as container, containerIndex}
+          <li class="menu-title mt-2">
             <div class="flex justify-between items-center">
-              <a
-                on:click={() => selectComponent(projectIndex, componentIndex)}
-                class="cursor-pointer"
-                class:bg-gray-700={$selectedElement === `project-${projectIndex}-component-${componentIndex}`}
+              <span
+                on:click={() => selectContainer(projectIndex, containerIndex)}
+                class="text-md font-semibold cursor-pointer"
               >
-                {component.title || 'Untitled Component'}
-              </a>
-              <div class="flex">
-                {#if componentIndex > 0}
+                Container {containerIndex + 1} ({container.layout})
+              </span>
+              <div>
+                {#if containerIndex > 0}
                   <button
                     class="btn btn-xs btn-outline mx-1"
                     on:click={(e) => {
                       e.stopPropagation();
-                      moveComponentUp(projectIndex, componentIndex);
+                      moveContainerUp(projectIndex, containerIndex);
                     }}
                   >
                     ↑
                   </button>
                 {/if}
-                {#if componentIndex < project.components.length - 1}
+                {#if containerIndex < project.containers.length - 1}
                   <button
                     class="btn btn-xs btn-outline mx-1"
                     on:click={(e) => {
                       e.stopPropagation();
-                      moveComponentDown(projectIndex, componentIndex);
+                      moveContainerDown(projectIndex, containerIndex);
                     }}
                   >
                     ↓
@@ -145,16 +159,63 @@
               </div>
             </div>
           </li>
+          <ul class="ml-4 space-y-1">
+            {#each container.components as component, componentIndex}
+              <li class="flex justify-between items-center">
+                <div class="flex justify-between items-center">
+                  <a
+                    on:click={() => selectComponent(projectIndex, containerIndex, componentIndex)}
+                    class="cursor-pointer"
+                    class:bg-gray-700={$selectedElement === `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
+                  >
+                    {component.title || 'Untitled Component'}
+                  </a>
+                  <div class="flex">
+                    {#if componentIndex > 0}
+                      <button
+                        class="btn btn-xs btn-outline mx-1"
+                        on:click={(e) => {
+                          e.stopPropagation();
+                          moveComponentUp(projectIndex, containerIndex, componentIndex);
+                        }}
+                      >
+                        ↑
+                      </button>
+                    {/if}
+                    {#if componentIndex < container.components.length - 1}
+                      <button
+                        class="btn btn-xs btn-outline mx-1"
+                        on:click={(e) => {
+                          e.stopPropagation();
+                          moveComponentDown(projectIndex, containerIndex, componentIndex);
+                        }}
+                      >
+                        ↓
+                      </button>
+                    {/if}
+                  </div>
+                </div>
+              </li>
+            {/each}
+          </ul>
+          <li class="mt-1">
+            <button
+              class="btn btn-outline btn-xs btn-tertiary w-full"
+              on:click={() => handleAddComponent(projectIndex, containerIndex)}
+            >
+              + Add Component
+            </button>
+          </li>
         {/each}
+        <li class="mt-2">
+          <button
+            class="btn btn-outline btn-sm btn-tertiary w-full"
+            on:click={() => handleAddContainer(projectIndex)}
+          >
+            + Add Container
+          </button>
+        </li>
       </ul>
-      <li class="mt-2">
-        <button
-          class="btn btn-outline btn-sm btn-tertiary w-full"
-          on:click={() => handleAddComponent(projectIndex)}
-        >
-          + Add Component
-        </button>
-      </li>
       <div class="divider"></div>
     {/each}
     <li class="mt-4">

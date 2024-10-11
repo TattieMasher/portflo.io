@@ -5,6 +5,6 @@
 
 <div class="grid grid-cols-1 gap-4">
   {#each $projects as project, index}
-    <Project {project} {index} />
+    <Project {project} projectIndex={index} />
   {/each}
 </div>

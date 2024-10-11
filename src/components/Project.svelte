@@ -1,5 +1,5 @@
 <script>
-  import Component from './Component.svelte';
+  import Container from './Container.svelte';
   import { selectedElement } from '../stores/selectedElement.js';
   import { selectedElementStyles } from '../stores/selectedElementStyles.js';
   import { elementStyles } from '../stores/elementStyles.js';
@@ -7,25 +7,23 @@
   import { getStyleString } from '../utils/styleUtils.js';
 
   export let project;
-  export let index;
+  export let projectIndex;
 
   const selectElement = () => {
-    selectedElement.set(`project-${index}`);
-    console.log('Selected Element:', `project-${index}`);
+    selectedElement.set(`project-${projectIndex}`);
+    console.log('Selected Element:', `project-${projectIndex}`);
   };
-
-  const layoutOptions = ['default', 'article', 'grid'];
 </script>
 
 <div
-  id={`project-${index}`}
+  id={`project-${projectIndex}`}
   class="card"
   on:click={$mode === 'edit' ? () => selectElement() : null}
-  class:selected={$mode === 'edit' && $selectedElement === `project-${index}`}
+  class:selected={$mode === 'edit' && $selectedElement === `project-${projectIndex}`}
   style={getStyleString(
-    $selectedElement === `project-${index}`
+    $selectedElement === `project-${projectIndex}`
       ? $selectedElementStyles
-      : $elementStyles[`project-${index}`]
+      : $elementStyles[`project-${projectIndex}`]
   )}
 >
   <div class="card-body">
@@ -63,49 +61,23 @@
             bind:value={project.project_url}
             placeholder="Project URL"
           />
-          <!-- Layout Selector -->
-          <div class="form-control w-full mt-2">
-            <label class="label">
-              <span class="label-text">Project Layout</span>
-            </label>
-            <select class="select select-bordered w-full" bind:value={project.layout}>
-              {#each layoutOptions as option}
-                <option value={option}>{option.charAt(0).toUpperCase() + option.slice(1)}</option>
-              {/each}
-            </select>
-          </div>
         </div>
       </div>
     {:else}
       <!-- Display fields for project -->
       <h2 class="card-title">{project.title}</h2>
       <p>{project.description}</p>
-      <a href={project.project_url} target="_blank" class="text-blue-600 hover:underline">
-        View Project
-      </a>
+      {#if project.project_url}
+        <a href={project.project_url} target="_blank" class="text-blue-600 hover:underline">
+          View Project
+        </a>
+      {/if}
     {/if}
 
-    <!-- Render components based on layout -->
-    {#if project.layout === 'article'}
-      <!-- Article Layout -->
-      <article>
-        {#each project.components as component, componentIndex}
-          <Component {component} {componentIndex} projectIndex={index} />
-        {/each}
-      </article>
-    {:else if project.layout === 'grid'}
-      <!-- Grid Layout -->
-      <div class="grid grid-cols-2 gap-4">
-        {#each project.components as component, componentIndex}
-          <Component {component} {componentIndex} projectIndex={index} />
-        {/each}
-      </div>
-    {:else}
-      <!-- Default Layout -->
-      {#each project.components as component, componentIndex}
-        <Component {component} {componentIndex} projectIndex={index} />
-      {/each}
-    {/if}
+    <!-- Render containers within the project -->
+    {#each project.containers as container, containerIndex}
+      <Container {container} {containerIndex} {projectIndex} />
+    {/each}
   </div>
 </div>
 

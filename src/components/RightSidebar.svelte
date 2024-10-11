@@ -6,18 +6,23 @@
   import { selectedElement } from '../stores/selectedElement.js';
   import { projects } from '../stores/projects.js';
 
-  // Get the selected component type
   let selectedComponentType = null;
 
   $: {
     if ($selectedElement && $selectedElement.startsWith('project-')) {
-      const [_, projectIndex, __, componentIndex] = $selectedElement.split('-');
+      const parts = $selectedElement.split('-');
+      const projectIndex = parseInt(parts[1]);
       const project = $projects[projectIndex];
-      if (project && componentIndex !== undefined) {
-        const component = project.components[componentIndex];
+
+      if (parts[2] === 'container' && parts[4] === 'component') {
+        const containerIndex = parseInt(parts[3]);
+        const componentIndex = parseInt(parts[5]);
+        const component = project?.containers?.[containerIndex]?.components?.[componentIndex];
         selectedComponentType = component?.type || null;
+      } else if (parts[2] === 'container') {
+        selectedComponentType = 'container';
       } else {
-        selectedComponentType = null;
+        selectedComponentType = 'project';
       }
     } else if ($selectedElement === 'user') {
       selectedComponentType = 'user';

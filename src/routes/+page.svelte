@@ -10,30 +10,6 @@
   import { mode } from '../stores/mode.js';
   import { user } from '../stores/user.js';
 
-  const addComponent = (projectIndex) => {
-    projects.update((proj) => {
-      const updatedProjects = proj.map((project, index) => {
-        if (index === projectIndex) {
-          return {
-            ...project,
-            components: [
-              ...project.components,
-              {
-                title: '',
-                content: '',
-                type: 'text', // Default type is 'text'
-                style: '',
-              },
-            ],
-          };
-        }
-        return project;
-      });
-      console.log('Added component to project', projectIndex);
-      return updatedProjects;
-    });
-  };
-
   const addProject = () => {
     projects.update((proj) => [
       ...proj,
@@ -41,26 +17,88 @@
         title: '',
         description: '',
         project_url: '#',
-        layout: 'default', // Initialize layout
-        components: [],
+        containers: [],
       },
     ]);
     console.log('Added new project');
   };
 
-  // Define the missing functions
-  const moveComponentUp = (projectIndex, componentIndex) => {
+  const addContainer = (projectIndex) => {
     projects.update((proj) => {
       const updatedProjects = proj.map((project, index) => {
-        if (index === projectIndex && componentIndex > 0) {
-          const updatedComponents = [...project.components];
-          [updatedComponents[componentIndex - 1], updatedComponents[componentIndex]] = [
-            updatedComponents[componentIndex],
-            updatedComponents[componentIndex - 1],
-          ];
+        if (index === projectIndex) {
           return {
             ...project,
-            components: updatedComponents,
+            containers: [
+              ...project.containers,
+              {
+                layout: 'article',
+                components: [],
+              },
+            ],
+          };
+        }
+        return project;
+      });
+      console.log('Added container to project', projectIndex);
+      return updatedProjects;
+    });
+  };
+
+  const addComponent = (projectIndex, containerIndex) => {
+    projects.update((proj) => {
+      const updatedProjects = proj.map((project, index) => {
+        if (index === projectIndex) {
+          const updatedContainers = project.containers.map((container, cIndex) => {
+            if (cIndex === containerIndex) {
+              return {
+                ...container,
+                components: [
+                  ...container.components,
+                  {
+                    title: '',
+                    content: '',
+                    type: 'text', // Default type is 'text'
+                  },
+                ],
+              };
+            }
+            return container;
+          });
+          return {
+            ...project,
+            containers: updatedContainers,
+          };
+        }
+        return project;
+      });
+      console.log('Added component to container', containerIndex, 'in project', projectIndex);
+      return updatedProjects;
+    });
+  };
+
+  // Define move functions for components, containers, and projects
+  const moveComponentUp = (projectIndex, containerIndex, componentIndex) => {
+    projects.update((proj) => {
+      const updatedProjects = proj.map((project, idx) => {
+        if (idx === projectIndex) {
+          const updatedContainers = project.containers.map((container, cIdx) => {
+            if (cIdx === containerIndex && componentIndex > 0) {
+              const updatedComponents = [...container.components];
+              [updatedComponents[componentIndex - 1], updatedComponents[componentIndex]] = [
+                updatedComponents[componentIndex],
+                updatedComponents[componentIndex - 1],
+              ];
+              return {
+                ...container,
+                components: updatedComponents,
+              };
+            }
+            return container;
+          });
+          return {
+            ...project,
+            containers: updatedContainers,
           };
         }
         return project;
@@ -69,18 +107,67 @@
     });
   };
 
-  const moveComponentDown = (projectIndex, componentIndex) => {
+  const moveComponentDown = (projectIndex, containerIndex, componentIndex) => {
     projects.update((proj) => {
-      const updatedProjects = proj.map((project, index) => {
-        if (index === projectIndex && componentIndex < project.components.length - 1) {
-          const updatedComponents = [...project.components];
-          [updatedComponents[componentIndex], updatedComponents[componentIndex + 1]] = [
-            updatedComponents[componentIndex + 1],
-            updatedComponents[componentIndex],
+      const updatedProjects = proj.map((project, idx) => {
+        if (idx === projectIndex) {
+          const updatedContainers = project.containers.map((container, cIdx) => {
+            if (cIdx === containerIndex && componentIndex < container.components.length - 1) {
+              const updatedComponents = [...container.components];
+              [updatedComponents[componentIndex], updatedComponents[componentIndex + 1]] = [
+                updatedComponents[componentIndex + 1],
+                updatedComponents[componentIndex],
+              ];
+              return {
+                ...container,
+                components: updatedComponents,
+              };
+            }
+            return container;
+          });
+          return {
+            ...project,
+            containers: updatedContainers,
+          };
+        }
+        return project;
+      });
+      return updatedProjects;
+    });
+  };
+
+  const moveContainerUp = (projectIndex, containerIndex) => {
+    projects.update((proj) => {
+      const updatedProjects = proj.map((project, idx) => {
+        if (idx === projectIndex && containerIndex > 0) {
+          const updatedContainers = [...project.containers];
+          [updatedContainers[containerIndex - 1], updatedContainers[containerIndex]] = [
+            updatedContainers[containerIndex],
+            updatedContainers[containerIndex - 1],
           ];
           return {
             ...project,
-            components: updatedComponents,
+            containers: updatedContainers,
+          };
+        }
+        return project;
+      });
+      return updatedProjects;
+    });
+  };
+
+  const moveContainerDown = (projectIndex, containerIndex) => {
+    projects.update((proj) => {
+      const updatedProjects = proj.map((project, idx) => {
+        if (idx === projectIndex && containerIndex < project.containers.length - 1) {
+          const updatedContainers = [...project.containers];
+          [updatedContainers[containerIndex], updatedContainers[containerIndex + 1]] = [
+            updatedContainers[containerIndex + 1],
+            updatedContainers[containerIndex],
+          ];
+          return {
+            ...project,
+            containers: updatedContainers,
           };
         }
         return project;
@@ -147,9 +234,12 @@
     {#if $mode === 'edit'}
       <Sidebar
         {addComponent}
+        {addContainer}
         {addProject}
         {moveComponentUp}
         {moveComponentDown}
+        {moveContainerUp}
+        {moveContainerDown}
         {moveProjectUp}
         {moveProjectDown}
         class="h-full"

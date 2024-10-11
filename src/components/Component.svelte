@@ -9,10 +9,11 @@
   export let component;
   export let componentIndex;
   export let projectIndex;
+  export let containerIndex;
 
   const selectElement = () => {
-    selectedElement.set(`project-${projectIndex}-component-${componentIndex}`);
-    console.log('Selected Element:', `project-${projectIndex}-component-${componentIndex}`);
+    selectedElement.set(`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
+    console.log('Selected Element:', `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
   };
 
   const handleImageUpload = (event) => {
@@ -23,18 +24,27 @@
         projects.update((proj) => {
           const updatedProjects = proj.map((project, idx) => {
             if (idx === projectIndex) {
-              const updatedComponents = project.components.map((comp, cIdx) => {
-                if (cIdx === componentIndex) {
+              const updatedContainers = project.containers.map((container, cIdx) => {
+                if (cIdx === containerIndex) {
+                  const updatedComponents = container.components.map((comp, compIdx) => {
+                    if (compIdx === componentIndex) {
+                      return {
+                        ...comp,
+                        content: e.target.result,
+                      };
+                    }
+                    return comp;
+                  });
                   return {
-                    ...comp,
-                    content: e.target.result,
+                    ...container,
+                    components: updatedComponents,
                   };
                 }
-                return comp;
+                return container;
               });
               return {
                 ...project,
-                components: updatedComponents,
+                containers: updatedContainers,
               };
             }
             return project;
@@ -61,18 +71,27 @@
         projects.update((proj) => {
           const updatedProjects = proj.map((project, idx) => {
             if (idx === projectIndex) {
-              const updatedComponents = project.components.map((comp, cIdx) => {
-                if (cIdx === componentIndex) {
+              const updatedContainers = project.containers.map((container, cIdx) => {
+                if (cIdx === containerIndex) {
+                  const updatedComponents = container.components.map((comp, compIdx) => {
+                    if (compIdx === componentIndex) {
+                      return {
+                        ...comp,
+                        images: images,
+                      };
+                    }
+                    return comp;
+                  });
                   return {
-                    ...comp,
-                    images: images,
+                    ...container,
+                    components: updatedComponents,
                   };
                 }
-                return comp;
+                return container;
               });
               return {
                 ...project,
-                components: updatedComponents,
+                containers: updatedContainers,
               };
             }
             return project;
@@ -85,7 +104,7 @@
 </script>
 
 <div
-  id={`project-${projectIndex}-component-${componentIndex}`}
+  id={`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
   class="mt-4"
   on:click={(e) => {
     if ($mode === 'edit') {
@@ -93,11 +112,11 @@
       selectElement();
     }
   }}
-  class:selected={$mode === 'edit' && $selectedElement === `project-${projectIndex}-component-${componentIndex}`}
+  class:selected={$mode === 'edit' && $selectedElement === `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
   style={getStyleString(
-    $selectedElement === `project-${projectIndex}-component-${componentIndex}`
+    $selectedElement === `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
       ? $selectedElementStyles
-      : $elementStyles[`project-${projectIndex}-component-${componentIndex}`]
+      : $elementStyles[`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`]
   )}
 >
   {#if $mode === 'edit'}
