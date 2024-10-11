@@ -132,6 +132,7 @@
       <div class="form-control w-full max-w-xs mt-2">
         <label class="label">
           <span class="label-text">Upload Image</span>
+          <span class="label-text-alt">Max size 1MB</span>
         </label>
         <input
           type="file"

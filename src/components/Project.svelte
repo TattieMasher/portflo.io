@@ -31,34 +31,50 @@
   <div class="card-body">
     {#if $mode === 'edit'}
       <!-- Input fields for editing project -->
-      <input
-        class="input input-bordered w-full max-w-xs"
-        type="text"
-        bind:value={project.title}
-        placeholder="Project Title"
-      />
-      <input
-        class="input input-bordered w-full max-w-xs"
-        type="text"
-        bind:value={project.project_url}
-        placeholder="Project URL"
-      />
-      <textarea
-        class="textarea textarea-bordered w-full max-w-xs mt-2"
-        bind:value={project.description}
-        placeholder="Project Description"
-      ></textarea>
-
-      <!-- Layout Selector -->
-      <div class="form-control w-full max-w-xs mt-2">
-        <label class="label">
-          <span class="label-text">Project Layout</span>
-        </label>
-        <select class="select select-bordered" bind:value={project.layout}>
-          {#each layoutOptions as option}
-            <option value={option}>{option.charAt(0).toUpperCase() + option.slice(1)}</option>
-          {/each}
-        </select>
+      <div class="flex flex-wrap -mx-2">
+        <!-- Left Column -->
+        <div class="w-full md:w-1/2 px-2">
+          <label class="label">
+            <span class="label-text">Project Title</span>
+          </label>
+          <input
+            class="input input-bordered w-full"
+            type="text"
+            bind:value={project.title}
+            placeholder="Project Title"
+          />
+          <label class="label">
+            <span class="label-text">Project Description</span>
+          </label>
+          <textarea
+            class="textarea textarea-bordered w-full mt-2"
+            bind:value={project.description}
+            placeholder="Project Description"
+          ></textarea>
+        </div>
+        <!-- Right Column -->
+        <div class="w-full md:w-1/2 px-2">
+          <label class="label">
+            <span class="label-text">Project URL (if applicable)</span>
+          </label>
+          <input
+            class="input input-bordered w-full"
+            type="text"
+            bind:value={project.project_url}
+            placeholder="Project URL"
+          />
+          <!-- Layout Selector -->
+          <div class="form-control w-full mt-2">
+            <label class="label">
+              <span class="label-text">Project Layout</span>
+            </label>
+            <select class="select select-bordered w-full" bind:value={project.layout}>
+              {#each layoutOptions as option}
+                <option value={option}>{option.charAt(0).toUpperCase() + option.slice(1)}</option>
+              {/each}
+            </select>
+          </div>
+        </div>
       </div>
     {:else}
       <!-- Display fields for project -->
