@@ -1,11 +1,23 @@
 <script>
   import { mode } from '../stores/mode.js';
   import { createEventDispatcher } from 'svelte';
+  import Icon from '@iconify/svelte';
+  import SettingsModal from './SettingsModal.svelte';
 
   const dispatch = createEventDispatcher();
 
   const handleSave = () => {
     dispatch('save');
+  };
+
+  let showSettingsModal = false;
+
+  const openSettingsModal = () => {
+    showSettingsModal = true;
+  };
+
+  const closeSettingsModal = () => {
+    showSettingsModal = false;
   };
 </script>
 
@@ -29,5 +41,14 @@
     <button class="btn btn-outline btn-accent" on:click={handleSave}>
       Save
     </button>
+    <!-- Settings Icon -->
+    <button class="btn btn-outline btn-secondary" on:click={openSettingsModal}>
+      <Icon icon="mdi-light:settings" class="text-xl" />
+    </button>
   </div>
 </div>
+
+<!-- Settings Modal -->
+{#if showSettingsModal}
+  <SettingsModal on:close={closeSettingsModal} />
+{/if}
