@@ -171,7 +171,7 @@
           on:change={handleImageUpload}
         />
         {#if component.content}
-          <img src={component.content} alt="Uploaded Image" class="mt-2 max-w-xs" />
+          <img src={component.content} alt="" class="mt-2 max-w-xs" />
         {/if}
       </div>
     {:else if component.type === 'carousel'}

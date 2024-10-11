@@ -157,44 +157,46 @@
   };
 </script>
 
-<aside class="menu p-4 w-80 bg-gray-800 text-white h-full overflow-y-auto">
-  <ul class="space-y-4">
-    <li class="menu-title">
-      <span class="text-xl font-semibold" style="text-transform: capitalize">
-        {selectedComponentType || 'Select an Element'} Settings
-      </span>
-    </li>
-    {#if $selectedElement}
-      <!-- Copy, Paste, and Delete Buttons -->
-      <div class="flex space-x-2 mb-4">
-        <button class="btn btn-sm btn-outline btn-info w-1/2" on:click={copyStyles}>Copy Style</button>
-        <button class="btn btn-sm btn-outline btn-accent w-1/2" on:click={pasteStyles}>Paste Style</button>
-      </div>
+{#if selectedComponentType} 
+  <aside class="menu p-4 w-80 bg-gray-800 text-white h-full overflow-y-auto">
+    <ul class="space-y-4">
+      <li class="menu-title">
+        <span class="text-xl font-semibold" style="text-transform: capitalize">
+          {selectedComponentType || 'Select an Element'} Settings
+        </span>
+      </li>
+      {#if $selectedElement}
+        <!-- Copy, Paste, and Delete Buttons -->
+        <div class="flex space-x-2 mb-4">
+          <button class="btn btn-sm btn-outline btn-info w-1/2" on:click={copyStyles}>Copy Style</button>
+          <button class="btn btn-sm btn-outline btn-accent w-1/2" on:click={pasteStyles}>Paste Style</button>
+        </div>
 
-      <!-- Include TextSettings for text components -->
-      {#if selectedComponentType === 'text' || $selectedElement === 'user'}
-        <TextSettings />
+        <!-- Include TextSettings for text components -->
+        {#if selectedComponentType === 'text' || $selectedElement === 'user'}
+          <TextSettings />
+        {/if}
+
+        <!-- Include ImageSettings for image components -->
+        {#if selectedComponentType === 'image'}
+          <ImageSettings />
+        {/if}
+
+        <!-- Include BackgroundSettings for all components -->
+        <BackgroundSettings />
+
+        <!-- Include BadgeSettings for the user profile -->
+        {#if $selectedElement === 'user'}
+          <BadgeSettings />
+        {/if}
+
+        {#if $selectedElement !== 'user'}
+          <button class="btn btn-sm btn-outline btn-error w-full" on:click={deleteSelectedElement}>Delete Item</button>
+        {/if}
       {/if}
-
-      <!-- Include ImageSettings for image components -->
-      {#if selectedComponentType === 'image'}
-        <ImageSettings />
-      {/if}
-
-      <!-- Include BackgroundSettings for all components -->
-      <BackgroundSettings />
-
-      <!-- Include BadgeSettings for the user profile -->
-      {#if $selectedElement === 'user'}
-        <BadgeSettings />
-      {/if}
-
-      {#if $selectedElement !== 'user'}
-        <button class="btn btn-sm btn-outline btn-error w-full" on:click={deleteSelectedElement}>Delete Item</button>
-      {/if}
-    {/if}
-  </ul>
-</aside>
+    </ul>
+  </aside>
+{/if}
 
 <style>
   aside {

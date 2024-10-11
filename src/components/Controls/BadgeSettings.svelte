@@ -35,6 +35,15 @@
   </label>
   <div class="collapse-content">
     <div class="form-control">
+      <div class="form-control">
+        <label class="cursor-pointer label">
+          <span class="label-text">Solid</span> <!-- TODO: Swap "badge-outline" class on badges in ProjectList and in RightSidebar -->
+          <input
+            type="checkbox"
+            class="checkbox checkbox-info"
+          />
+        </label>
+      </div>
       <label class="label">
         <span class="label-text">Badge Theme</span>
       </label>
