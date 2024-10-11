@@ -3,6 +3,9 @@ export const cssPropertyMap = {
   fontSize: 'font-size',
   textAlign: 'text-align',
   color: 'color',
+  width: 'width',
+  height: 'height',
+  borderRadius: 'border-radius',
 };
 
 export const defaultStyles = {
@@ -10,6 +13,9 @@ export const defaultStyles = {
   fontSize: '16px',
   textAlign: 'left',
   color: '#ffffff',
+  width: 'auto',
+  height: 'auto',
+  borderRadius: '0px',
 };
 
 export const getStyleString = (styles) => {
