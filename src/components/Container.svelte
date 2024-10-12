@@ -19,14 +19,6 @@
   // Available layout options for containers
   const layoutOptions = ['article', 'grid', 'carousel', 'timeline'];
 
-  // Local variable for layout
-  let layout = container.layout || 'article';
-
-  // Watch for changes in container.layout
-  $: if (layout !== container.layout) {
-    layout = container.layout;
-  }
-
   const updateContainerLayout = (event) => {
     const newLayout = event.target.value;
     projects.update((proj) => {
@@ -77,7 +69,7 @@
       </label>
       <select
         class="select select-bordered"
-        bind:value={layout}
+        bind:value={container.layout}
         on:change={updateContainerLayout}
       >
         {#each layoutOptions as option}
