@@ -1,8 +1,8 @@
 <script>
-  import { mode } from '../stores/mode.js';
+  import { mode } from '../../stores/mode.js';
   import { createEventDispatcher } from 'svelte';
   import Icon from '@iconify/svelte';
-  import SettingsModal from './SettingsModal.svelte';
+  import SettingsModal from '../SettingsModal.svelte';
 
   const dispatch = createEventDispatcher();
 

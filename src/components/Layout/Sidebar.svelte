@@ -1,6 +1,6 @@
 <script>
-  import { projects } from '../stores/projects.js';
-  import { selectedElement } from '../stores/selectedElement.js';
+  import { projects } from '../../stores/projects.js';
+  import { selectedElement } from '../../stores/selectedElement.js';
 
   export let addContainer;
   export let addComponent;

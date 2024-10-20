@@ -1,9 +1,9 @@
 <script>
-  import UserProfile from '../components/UserProfile.svelte';
-  import ProjectList from '../components/ProjectList.svelte';
-  import Toolbar from '../components/Toolbar.svelte';
-  import Sidebar from '../components/Sidebar.svelte';
-  import RightSidebar from '../components/RightSidebar.svelte';
+  import UserProfile from '../components/User/UserProfile.svelte';
+  import ProjectList from '../components/Projects/ProjectList.svelte';
+  import Toolbar from '../components/Layout/Toolbar.svelte';
+  import Sidebar from '../components/Layout/Sidebar.svelte';
+  import RightSidebar from '../components/Layout/RightSidebar.svelte';
   import { get } from 'svelte/store';
   import { projects } from '../stores/projects.js';
   import { elementStyles } from '../stores/elementStyles.js';

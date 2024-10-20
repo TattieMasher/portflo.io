@@ -1,11 +1,11 @@
 <script>
-  import Component from './Component.svelte';
-  import { selectedElement } from '../stores/selectedElement.js';
-  import { selectedElementStyles } from '../stores/selectedElementStyles.js';
-  import { elementStyles } from '../stores/elementStyles.js';
-  import { mode } from '../stores/mode.js';
-  import { getStyleString } from '../utils/styleUtils.js';
-  import { projects } from '../stores/projects.js';
+  import Component from '../Projects/Component.svelte';
+  import { selectedElement } from '../../stores/selectedElement.js';
+  import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
+  import { elementStyles } from '../../stores/elementStyles.js';
+  import { mode } from '../../stores/mode.js';
+  import { getStyleString } from '../../utils/styleUtils.js';
+  import { projects } from '../../stores/projects.js';
 
   export let container;
   export let containerIndex;

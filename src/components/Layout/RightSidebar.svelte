@@ -1,13 +1,13 @@
 <script>
-  import TextSettings from './Controls/TextSettings.svelte';
-  import BackgroundSettings from './Controls/BackgroundSettings.svelte';
-  import BadgeSettings from './Controls/BadgeSettings.svelte';
-  import ImageSettings from './Controls/ImageSettings.svelte';
-  import { selectedElement } from '../stores/selectedElement.js';
-  import { projects } from '../stores/projects.js';
-  import { copiedStyles } from '../stores/copiedStyles.js';
-  import { elementStyles } from '../stores/elementStyles.js';
-  import { addNotification } from '../stores/notifications.js';
+  import TextSettings from '../Controls/TextSettings.svelte';
+  import BackgroundSettings from '../Controls/BackgroundSettings.svelte';
+  import BadgeSettings from '../Controls/BadgeSettings.svelte';
+  import ImageSettings from '../Controls/ImageSettings.svelte';
+  import { selectedElement } from '../../stores/selectedElement.js';
+  import { projects } from '../../stores/projects.js';
+  import { copiedStyles } from '../../stores/copiedStyles.js';
+  import { elementStyles } from '../../stores/elementStyles.js';
+  import { addNotification } from '../../stores/notifications.js';
   import { get } from 'svelte/store';
 
   let selectedComponentType = null;

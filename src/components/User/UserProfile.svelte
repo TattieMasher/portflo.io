@@ -1,10 +1,10 @@
 <script>
-  import { selectedElement } from '../stores/selectedElement.js';
-  import { elementStyles } from '../stores/elementStyles.js';
-  import { selectedElementStyles } from '../stores/selectedElementStyles.js';
-  import { mode } from '../stores/mode.js';
-  import { getStyleString } from '../utils/styleUtils.js';
-  import { user } from '../stores/user.js';
+  import { selectedElement } from '../../stores/selectedElement.js';
+  import { elementStyles } from '../../stores/elementStyles.js';
+  import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
+  import { mode } from '../../stores/mode.js';
+  import { getStyleString } from '../../utils/styleUtils.js';
+  import { user } from '../../stores/user.js';
   import Icon from '@iconify/svelte';
 
   const selectElement = () => {
