@@ -1,5 +1,5 @@
 <script>
-  import { notifications } from '../stores/notifications.js';
+  import { notifications } from '../../stores/notifications.js';
   import NotificationItem from './NotificationItem.svelte';
 
   let visibleNotifications = [];
