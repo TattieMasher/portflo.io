@@ -172,8 +172,8 @@
           <button class="btn btn-sm btn-outline btn-accent w-1/2" on:click={pasteStyles}>Paste Style</button>
         </div>
 
-        <!-- Include TextSettings for text components -->
-        {#if selectedComponentType === 'text' || $selectedElement === 'user'}
+        <!-- Include TextSettings for text components and projects -->
+        {#if selectedComponentType === 'text' || selectedComponentType === 'project' || $selectedElement === 'user'}
           <TextSettings />
         {/if}
 
