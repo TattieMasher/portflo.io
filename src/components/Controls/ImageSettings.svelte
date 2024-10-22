@@ -4,9 +4,9 @@
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
   import { updateElementStyle } from '../../utils/updateStyles.js';
 
-  let imageWidth = 'auto';
+  let imageWidth = 100; // Percentage value
   let imageHeight = 'auto';
-  let borderRadius = '0px';
+  let borderRadius = 0; // Percentage value
   let previousSelectedElement = null;
 
   // Initialize local variables when selectedElement changes
@@ -16,21 +16,34 @@
   }
 
   function initializeLocalVariables() {
-    imageWidth = $selectedElementStyles.width || 'auto';
+    // Initialize imageWidth
+    if ($selectedElementStyles.width && $selectedElementStyles.width.endsWith('%')) {
+      imageWidth = parseInt($selectedElementStyles.width);
+    } else {
+      imageWidth = 100;
+    }
+
     imageHeight = $selectedElementStyles.height || 'auto';
-    borderRadius = $selectedElementStyles.borderRadius || '0px';
+    borderRadius = parseInt($selectedElementStyles.borderRadius) || 0;
   }
 
-  const updateWidth = () => {
-    updateElementStyle($selectedElement, 'width', imageWidth);
-  };
+  // Reactive statement to update image styles
+  $: {
+    updateElementStyle($selectedElement, 'width', `${imageWidth}%`);
+    updateElementStyle(
+      $selectedElement,
+      'height',
+      imageHeight === 'auto' ? 'auto' : `${imageHeight}px`
+    );
+    updateElementStyle($selectedElement, 'borderRadius', `${borderRadius}%`);
+  }
 
   const updateHeight = () => {
-    updateElementStyle($selectedElement, 'height', imageHeight);
-  };
-
-  const updateBorderRadius = () => {
-    updateElementStyle($selectedElement, 'borderRadius', borderRadius);
+    if (imageHeight === 'auto') {
+      updateElementStyle($selectedElement, 'height', 'auto');
+    } else {
+      updateElementStyle($selectedElement, 'height', `${imageHeight}px`);
+    }
   };
 </script>
 
@@ -42,38 +55,38 @@
   <div class="collapse-content">
     <div class="form-control">
       <label class="label">
-        <span class="label-text">Width</span>
+        <span class="label-text">Width: {imageWidth}%</span>
       </label>
       <input
-        type="text"
-        class="input input-bordered"
+        type="range"
+        min="0"
+        max="100"
         bind:value={imageWidth}
-        on:input={updateWidth}
-        placeholder="e.g., 100%, 300px"
+        class="range range-primary"
       />
     </div>
-    <div class="form-control">
+    <div class="form-control mt-4">
       <label class="label">
-        <span class="label-text">Height</span>
+        <span class="label-text">Height (px)</span>
       </label>
       <input
         type="text"
         class="input input-bordered"
         bind:value={imageHeight}
         on:input={updateHeight}
-        placeholder="e.g., auto, 200px"
+        placeholder="e.g., auto, 200"
       />
     </div>
-    <div class="form-control">
+    <div class="form-control mt-4">
       <label class="label">
-        <span class="label-text">Border Radius</span>
+        <span class="label-text">Border Radius: {borderRadius}%</span>
       </label>
       <input
-        type="text"
-        class="input input-bordered"
+        type="range"
+        min="0"
+        max="50"
         bind:value={borderRadius}
-        on:input={updateBorderRadius}
-        placeholder="e.g., 0px, 50%"
+        class="range range-primary"
       />
     </div>
   </div>

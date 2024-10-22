@@ -5,7 +5,7 @@
 
   let isTransparent = false;
   let backgroundColor = '#ffffff';
-  let borderRadius = '0px';
+  let borderRadius = 0; // Now a number representing pixels
   let previousSelectedElement = null;
 
   // Initialize local variables when selectedElement changes
@@ -17,7 +17,7 @@
   function initializeLocalVariables() {
     backgroundColor = $selectedElementStyles.backgroundColor || '#ffffff';
     isTransparent = !backgroundColor || backgroundColor === 'transparent';
-    borderRadius = $selectedElementStyles.borderRadius || '0px';
+    borderRadius = parseInt($selectedElementStyles.borderRadius) || 0;
   }
 
   // Reactive statement to update background color and border radius
@@ -26,7 +26,7 @@
     updateElementStyle($selectedElement, 'backgroundColor', color);
 
     if (!isTransparent) {
-      updateElementStyle($selectedElement, 'borderRadius', borderRadius);
+      updateElementStyle($selectedElement, 'borderRadius', `${borderRadius}px`);
     } else {
       // Reset border radius when background is transparent
       updateElementStyle($selectedElement, 'borderRadius', '0px');
@@ -62,16 +62,17 @@
           bind:value={backgroundColor}
         />
 
-        <!-- Border Radius Input -->
+        <!-- Border Radius Slider -->
         <label for="border-radius-control" class="label mt-4">
-          <span class="label-text">Border Radius</span>
+          <span class="label-text">Border Radius: {borderRadius}px</span>
         </label>
         <input
           id="border-radius-control"
-          type="text"
-          class="input input-bordered"
+          type="range"
+          min="0"
+          max="50"
           bind:value={borderRadius}
-          placeholder="e.g., 0px, 5px, 50%"
+          class="range range-secondary"
         />
       {/if}
     </div>
