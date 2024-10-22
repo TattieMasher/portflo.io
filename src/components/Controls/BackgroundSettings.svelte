@@ -1,4 +1,3 @@
-<!-- components/Controls/BackgroundSettings.svelte -->
 <script>
   import { selectedElement } from '../../stores/selectedElement.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
@@ -6,6 +5,7 @@
 
   let isTransparent = false;
   let backgroundColor = '#ffffff';
+  let borderRadius = '0px';
   let previousSelectedElement = null;
 
   // Initialize local variables when selectedElement changes
@@ -17,12 +17,20 @@
   function initializeLocalVariables() {
     backgroundColor = $selectedElementStyles.backgroundColor || '#ffffff';
     isTransparent = !backgroundColor || backgroundColor === 'transparent';
+    borderRadius = $selectedElementStyles.borderRadius || '0px';
   }
 
-  // Reactive statement to update background color when dependencies change
+  // Reactive statement to update background color and border radius
   $: {
     const color = isTransparent ? 'transparent' : backgroundColor;
     updateElementStyle($selectedElement, 'backgroundColor', color);
+
+    if (!isTransparent) {
+      updateElementStyle($selectedElement, 'borderRadius', borderRadius);
+    } else {
+      // Reset border radius when background is transparent
+      updateElementStyle($selectedElement, 'borderRadius', '0px');
+    }
   }
 </script>
 
@@ -52,6 +60,18 @@
           type="color"
           class="input input-bordered"
           bind:value={backgroundColor}
+        />
+
+        <!-- Border Radius Input -->
+        <label for="border-radius-control" class="label mt-4">
+          <span class="label-text">Border Radius</span>
+        </label>
+        <input
+          id="border-radius-control"
+          type="text"
+          class="input input-bordered"
+          bind:value={borderRadius}
+          placeholder="e.g., 0px, 5px, 50%"
         />
       {/if}
     </div>
