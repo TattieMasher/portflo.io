@@ -52,26 +52,12 @@
 </script>
 
 <div
-  id={`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
   on:click={(e) => {
     if ($mode === 'edit') {
       e.stopPropagation();
       selectElement();
     }
   }}
-  class:selected={
-    $mode === 'edit' &&
-    $selectedElement ===
-      `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
-  }
-  style={getStyleString(
-    $selectedElement ===
-      `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
-      ? $selectedElementStyles
-      : $elementStyles[
-          `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
-        ] || {}
-  )}
 >
   {#if $mode === 'edit'}
     <!-- Image Upload -->
@@ -87,13 +73,56 @@
         on:change={handleImageUpload}
       />
       {#if component.content}
-        <img src={component.content} alt="" class="mt-2 max-w-xs" />
+        <img
+          id={`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
+          src={component.content}
+          alt=""
+          class="mt-2 max-w-xs"
+          class:selected={
+            $mode === 'edit' &&
+            $selectedElement ===
+              `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
+          }
+          style={getStyleString(
+            $selectedElement ===
+              `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
+              ? $selectedElementStyles
+              : $elementStyles[
+                  `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
+                ] || {}
+          )}
+          on:click={(e) => {
+            if ($mode === 'edit') {
+              e.stopPropagation();
+              selectElement();
+            }
+          }}
+        />
       {/if}
     </div>
   {:else}
     <!-- Display fields for component -->
     {#if component.content}
-      <img src={component.content} alt={component.title} class="max-w-full h-auto" />
+      <img
+        id={`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
+        src={component.content}
+        alt={component.title}
+        class="max-w-full h-auto"
+        style={getStyleString(
+          $selectedElement ===
+            `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
+            ? $selectedElementStyles
+            : $elementStyles[
+                `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
+              ] || {}
+        )}
+      />
     {/if}
   {/if}
 </div>
+
+<style>
+  .selected {
+    border: 2px solid blue;
+  }
+</style>
