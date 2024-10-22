@@ -67,7 +67,7 @@
   style={getStyleString(
     $selectedElement === `project-${projectIndex}`
       ? $selectedElementStyles
-      : $elementStyles[`project-${projectIndex}`]
+      : $elementStyles[`project-${projectIndex}`] || {}
   )}
 >
   <div class="card-body">

@@ -1,7 +1,8 @@
+<!-- components/User/UserProfile.svelte -->
 <script>
   import { selectedElement } from '../../stores/selectedElement.js';
-  import { elementStyles } from '../../stores/elementStyles.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
+  import { elementStyles } from '../../stores/elementStyles.js';
   import { mode } from '../../stores/mode.js';
   import { getStyleString } from '../../utils/styleUtils.js';
   import { user } from '../../stores/user.js';
@@ -9,7 +10,6 @@
 
   const selectElement = () => {
     selectedElement.set('user');
-    console.log('User Profile selected, selectedElement set to:', 'user');
   };
 
   // For adding new skills
@@ -46,8 +46,10 @@
     }
   };
 
-  // Reactive variable for badgeClass
-  $: badgeClass = $elementStyles['user']?.badgeClass || 'badge-primary';
+  // Local variable for badgeClass
+  let badgeClass = 'badge-primary';
+
+  $: badgeClass = $selectedElementStyles.badgeClass || 'badge-primary';
 </script>
 
 <svelte:head>
@@ -57,9 +59,13 @@
 <div
   id="user"
   class="card"
-  style={getStyleString($selectedElement === 'user' ? $selectedElementStyles : $elementStyles['user'])}
   on:click={$mode === 'edit' ? selectElement : null}
   class:selected={$mode === 'edit' && $selectedElement === 'user'}
+  style={getStyleString(
+    $selectedElement === 'user'
+      ? $selectedElementStyles
+      : $elementStyles['user'] || {}
+  )}
 >
   <figure class="px-10 pt-10">
     <img src={$user.profile_picture} alt="Profile Picture" class="rounded-full w-24 h-24" />
@@ -112,10 +118,8 @@
       </div>
     {:else}
       <!-- Display fields for user -->
-      <h2 class="card-title" style={getStyleString($selectedElementStyles)}>
-        {$user.full_name}
-      </h2>
-      <p style={getStyleString($selectedElementStyles)}>{$user.bio}</p>
+      <h2 class="card-title">{$user.full_name}</h2>
+      <p>{$user.bio}</p>
 
       <!-- Display skills -->
       {#if $user.skills && $user.skills.length > 0}

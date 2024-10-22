@@ -1,7 +1,8 @@
+<!-- components/Controls/BadgeSettings.svelte -->
 <script>
-  import { elementStyles } from '../../stores/elementStyles.js';
   import { selectedElement } from '../../stores/selectedElement.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
+  import { updateElementStyle } from '../../utils/updateStyles.js';
 
   const presetThemes = [
     { name: 'Primary', class: 'badge-primary' },
@@ -14,17 +15,7 @@
   ];
 
   const updateBadgeClass = (badgeClass) => {
-    const elementId = $selectedElement;
-    if (elementId) {
-      elementStyles.update((styles) => {
-        const updatedStyles = { ...styles };
-        if (!updatedStyles[elementId]) {
-          updatedStyles[elementId] = {};
-        }
-        updatedStyles[elementId].badgeClass = badgeClass;
-        return updatedStyles;
-      });
-    }
+    updateElementStyle($selectedElement, 'badgeClass', badgeClass);
   };
 </script>
 
@@ -35,15 +26,6 @@
   </label>
   <div class="collapse-content">
     <div class="form-control">
-      <div class="form-control">
-        <label class="cursor-pointer label">
-          <span class="label-text">Solid</span> <!-- TODO: Swap "badge-outline" class on badges in ProjectList and in RightSidebar -->
-          <input
-            type="checkbox"
-            class="checkbox checkbox-info"
-          />
-        </label>
-      </div>
       <label class="label">
         <span class="label-text">Badge Theme</span>
       </label>

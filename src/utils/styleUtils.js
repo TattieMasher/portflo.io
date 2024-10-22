@@ -1,3 +1,4 @@
+// utils/styleUtils.js
 export const cssPropertyMap = {
   backgroundColor: 'background-color',
   fontSize: 'font-size',
@@ -6,6 +7,7 @@ export const cssPropertyMap = {
   width: 'width',
   height: 'height',
   borderRadius: 'border-radius',
+  // Add more 
 };
 
 export const defaultStyles = {
@@ -16,6 +18,7 @@ export const defaultStyles = {
   width: 'auto',
   height: 'auto',
   borderRadius: '0px',
+  // Add more 
 };
 
 export const getStyleString = (styles) => {

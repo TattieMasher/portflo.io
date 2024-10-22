@@ -1,26 +1,29 @@
+<!-- components/Controls/BackgroundSettings.svelte -->
 <script>
-  import { elementStyles } from '../../stores/elementStyles.js';
   import { selectedElement } from '../../stores/selectedElement.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
+  import { updateElementStyle } from '../../utils/updateStyles.js';
 
   let isTransparent = false;
+  let backgroundColor = '#ffffff';
+  let previousSelectedElement = null;
 
-  // Reactive statement to update isTransparent based on backgroundColor
-  $: isTransparent = !$selectedElementStyles.backgroundColor || $selectedElementStyles.backgroundColor === 'transparent';
+  // Initialize local variables when selectedElement changes
+  $: if ($selectedElement !== previousSelectedElement) {
+    previousSelectedElement = $selectedElement;
+    initializeLocalVariables();
+  }
 
-  const toggleTransparency = () => {
-    const elementId = $selectedElement;
-    if (elementId) {
-      elementStyles.update((styles) => {
-        const updatedStyles = { ...styles };
-        if (!updatedStyles[elementId]) {
-          updatedStyles[elementId] = {};
-        }
-        updatedStyles[elementId].backgroundColor = isTransparent ? '#ffffff' : 'transparent';
-        return updatedStyles;
-      });
-    }
-  };
+  function initializeLocalVariables() {
+    backgroundColor = $selectedElementStyles.backgroundColor || '#ffffff';
+    isTransparent = !backgroundColor || backgroundColor === 'transparent';
+  }
+
+  // Reactive statement to update background color when dependencies change
+  $: {
+    const color = isTransparent ? 'transparent' : backgroundColor;
+    updateElementStyle($selectedElement, 'backgroundColor', color);
+  }
 </script>
 
 <div class="collapse collapse-arrow bg-base-200">
@@ -37,7 +40,6 @@
             type="checkbox"
             class="checkbox checkbox-info"
             bind:checked={isTransparent}
-            on:change={toggleTransparency}
           />
         </label>
       </div>
@@ -49,20 +51,7 @@
           id="background-color-control"
           type="color"
           class="input input-bordered"
-          value={$selectedElementStyles.backgroundColor || '#ffffff'}
-          on:input={(e) => {
-            const elementId = $selectedElement;
-            if (elementId) {
-              elementStyles.update((styles) => {
-                const updatedStyles = { ...styles };
-                if (!updatedStyles[elementId]) {
-                  updatedStyles[elementId] = {};
-                }
-                updatedStyles[elementId].backgroundColor = e.target.value;
-                return updatedStyles;
-              });
-            }
-          }}
+          bind:value={backgroundColor}
         />
       {/if}
     </div>

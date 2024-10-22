@@ -1,8 +1,9 @@
+<!-- components/Controls/TextSettings.svelte -->
 <script>
   import Icon from '@iconify/svelte';
-  import { elementStyles } from '../../stores/elementStyles.js';
   import { selectedElement } from '../../stores/selectedElement.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
+  import { updateElementStyle } from '../../utils/updateStyles.js';
 
   const fontSizes = {
     Small: '12px',
@@ -11,52 +12,40 @@
     XL: '24px',
   };
 
-  const defaultFontSize = '16px'; // Medium size
-
-  // Function to get the current font size label
-  const getCurrentFontSizeLabel = () => {
-    const currentFontSize = $selectedElementStyles.fontSize || defaultFontSize;
-    return Object.keys(fontSizes).find((key) => fontSizes[key] === currentFontSize);
-  };
-
-  // Reactive variable for the selected font size
-  let selectedFontSize = getCurrentFontSizeLabel();
-
-  $: selectedFontSize = getCurrentFontSizeLabel();
-
-  const updateFontSize = (size) => {
-    const elementId = $selectedElement;
-    if (elementId) {
-      elementStyles.update((styles) => {
-        const updatedStyles = { ...styles };
-        if (!updatedStyles[elementId]) {
-          updatedStyles[elementId] = {};
-        }
-        updatedStyles[elementId].fontSize = fontSizes[size];
-        return updatedStyles;
-      });
-    }
-  };
-
   const alignments = ['left', 'center', 'right', 'justify'];
 
-  // Reactive variable for the selected alignment
-  let selectedAlignment = $selectedElementStyles.textAlign || 'left';
+  let selectedFontSize = 'Medium';
+  let selectedAlignment = 'left';
+  let textColor = '#000000';
+  let previousSelectedElement = null;
 
-  $: selectedAlignment = $selectedElementStyles.textAlign || 'left';
+  // Initialize local variables when selectedElement changes
+  $: if ($selectedElement !== previousSelectedElement) {
+    previousSelectedElement = $selectedElement;
+    initializeLocalVariables();
+  }
+
+  function initializeLocalVariables() {
+    selectedFontSize =
+      Object.keys(fontSizes).find(
+        (key) => fontSizes[key] === ($selectedElementStyles.fontSize || '16px')
+      ) || 'Medium';
+
+    selectedAlignment = $selectedElementStyles.textAlign || 'left';
+    textColor = $selectedElementStyles.color || '#000000';
+  }
+
+  const updateFontSize = () => {
+    updateElementStyle($selectedElement, 'fontSize', fontSizes[selectedFontSize]);
+  };
 
   const updateAlignment = (alignment) => {
-    const elementId = $selectedElement;
-    if (elementId) {
-      elementStyles.update((styles) => {
-        const updatedStyles = { ...styles };
-        if (!updatedStyles[elementId]) {
-          updatedStyles[elementId] = {};
-        }
-        updatedStyles[elementId].textAlign = alignment;
-        return updatedStyles;
-      });
-    }
+    selectedAlignment = alignment;
+    updateElementStyle($selectedElement, 'textAlign', alignment);
+  };
+
+  const updateTextColor = () => {
+    updateElementStyle($selectedElement, 'color', textColor);
   };
 </script>
 
@@ -76,9 +65,9 @@
             <input
               type="radio"
               name="font-size"
-              value={fontSizes[size]}
+              value={size}
               bind:group={selectedFontSize}
-              on:change={() => updateFontSize(size)}
+              on:change={updateFontSize}
             />
             <span class="ml-2">{size}</span>
           </label>
@@ -112,20 +101,8 @@
         id="text-color-control"
         type="color"
         class="input input-bordered"
-        value={$selectedElementStyles.color || '#000000'}
-        on:input={(e) => {
-          const elementId = $selectedElement;
-          if (elementId) {
-            elementStyles.update((styles) => {
-              const updatedStyles = { ...styles };
-              if (!updatedStyles[elementId]) {
-                updatedStyles[elementId] = {};
-              }
-              updatedStyles[elementId].color = e.target.value;
-              return updatedStyles;
-            });
-          }
-        }}
+        bind:value={textColor}
+        on:input={updateTextColor}
       />
     </div>
   </div>

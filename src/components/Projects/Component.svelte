@@ -57,11 +57,18 @@
       selectElement();
     }
   }}
-  class:selected={$mode === 'edit' && $selectedElement === `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
+  class:selected={
+    $mode === 'edit' &&
+    $selectedElement ===
+      `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
+  }
   style={getStyleString(
-    $selectedElement === `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
+    $selectedElement ===
+      `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
       ? $selectedElementStyles
-      : $elementStyles[`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`]
+      : $elementStyles[
+          `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
+        ] || {}
   )}
 >
   {#if $mode === 'edit'}

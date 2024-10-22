@@ -54,11 +54,14 @@
       selectElement();
     }
   }}
-  class:selected={$mode === 'edit' && $selectedElement === `project-${projectIndex}-container-${containerIndex}`}
+  class:selected={
+    $mode === 'edit' &&
+    $selectedElement === `project-${projectIndex}-container-${containerIndex}`
+  }
   style={getStyleString(
     $selectedElement === `project-${projectIndex}-container-${containerIndex}`
       ? $selectedElementStyles
-      : $elementStyles[`project-${projectIndex}-container-${containerIndex}`]
+      : $elementStyles[`project-${projectIndex}-container-${containerIndex}`] || {}
   )}
 >
   {#if $mode === 'edit'}

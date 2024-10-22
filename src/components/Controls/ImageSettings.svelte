@@ -1,30 +1,36 @@
+<!-- components/Controls/ImageSettings.svelte -->
 <script>
-  import { elementStyles } from '../../stores/elementStyles.js';
   import { selectedElement } from '../../stores/selectedElement.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
+  import { updateElementStyle } from '../../utils/updateStyles.js';
 
-  // Default values for image width and height
-  const defaultWidth = '100%';
-  const defaultHeight = 'auto';
-  const defaultBorderRadius = '0px';
+  let imageWidth = 'auto';
+  let imageHeight = 'auto';
+  let borderRadius = '0px';
+  let previousSelectedElement = null;
 
-  // Reactive variables for width, height, and border-radius
-  $: imageWidth = $selectedElementStyles.width || defaultWidth;
-  $: imageHeight = $selectedElementStyles.height || defaultHeight;
-  $: borderRadius = $selectedElementStyles.borderRadius || defaultBorderRadius;
+  // Initialize local variables when selectedElement changes
+  $: if ($selectedElement !== previousSelectedElement) {
+    previousSelectedElement = $selectedElement;
+    initializeLocalVariables();
+  }
 
-  const updateStyle = (property, value) => {
-    const elementId = $selectedElement;
-    if (elementId) {
-      elementStyles.update((styles) => {
-        const updatedStyles = { ...styles };
-        if (!updatedStyles[elementId]) {
-          updatedStyles[elementId] = {};
-        }
-        updatedStyles[elementId][property] = value;
-        return updatedStyles;
-      });
-    }
+  function initializeLocalVariables() {
+    imageWidth = $selectedElementStyles.width || 'auto';
+    imageHeight = $selectedElementStyles.height || 'auto';
+    borderRadius = $selectedElementStyles.borderRadius || '0px';
+  }
+
+  const updateWidth = () => {
+    updateElementStyle($selectedElement, 'width', imageWidth);
+  };
+
+  const updateHeight = () => {
+    updateElementStyle($selectedElement, 'height', imageHeight);
+  };
+
+  const updateBorderRadius = () => {
+    updateElementStyle($selectedElement, 'borderRadius', borderRadius);
   };
 </script>
 
@@ -42,7 +48,7 @@
         type="text"
         class="input input-bordered"
         bind:value={imageWidth}
-        on:input={(e) => updateStyle('width', e.target.value)}
+        on:input={updateWidth}
         placeholder="e.g., 100%, 300px"
       />
     </div>
@@ -54,7 +60,7 @@
         type="text"
         class="input input-bordered"
         bind:value={imageHeight}
-        on:input={(e) => updateStyle('height', e.target.value)}
+        on:input={updateHeight}
         placeholder="e.g., auto, 200px"
       />
     </div>
@@ -66,7 +72,7 @@
         type="text"
         class="input input-bordered"
         bind:value={borderRadius}
-        on:input={(e) => updateStyle('borderRadius', e.target.value)}
+        on:input={updateBorderRadius}
         placeholder="e.g., 0px, 50%"
       />
     </div>
