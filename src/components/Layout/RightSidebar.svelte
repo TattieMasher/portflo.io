@@ -3,6 +3,7 @@
   import BackgroundSettings from '../Controls/BackgroundSettings.svelte';
   import BadgeSettings from '../Controls/BadgeSettings.svelte';
   import ImageSettings from '../Controls/ImageSettings.svelte';
+  import CarouselSettings from '../Controls/CarouselSettings.svelte';
   import { selectedElement } from '../../stores/selectedElement.js';
   import { projects } from '../../stores/projects.js';
   import { copiedStyles } from '../../stores/copiedStyles.js';
@@ -180,6 +181,11 @@
         <!-- Include ImageSettings for image components -->
         {#if selectedComponentType === 'image'}
           <ImageSettings />
+        {/if}
+
+        <!-- Include CarouselSettings for carousel components -->
+        {#if selectedComponentType === 'carousel'}
+          <CarouselSettings />
         {/if}
 
         <!-- Include BackgroundSettings for all components -->
