@@ -17,7 +17,7 @@
   };
 
   // Available layout options for containers
-  const layoutOptions = ['article', 'grid', 'carousel', 'timeline'];
+  const layoutOptions = ['article', 'grid', 'carousel', 'timeline', 'masonry'];
 
   const updateContainerLayout = (event) => {
     const newLayout = event.target.value;
@@ -117,11 +117,28 @@
         </div>
       {/each}
     </div>
+  {:else if container.layout === 'masonry'}
+    <!-- Masonry Layout -->
+    <div class="masonry-grid">
+      {#each container.components as component, componentIndex}
+        <div class="masonry-item">
+          <Component {component} {componentIndex} {projectIndex} {containerIndex} />
+        </div>
+      {/each}
+    </div>
   {/if}
 </div>
 
 <style>
   .selected {
     border: 2px solid blue;
+  }
+  .masonry-grid {
+    column-count: 3;
+    column-gap: 1rem;
+  }
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 1rem;
   }
 </style>
