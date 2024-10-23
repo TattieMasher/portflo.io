@@ -1,9 +1,10 @@
-<!-- components/Controls/TextSettings.svelte -->
 <script>
   import Icon from '@iconify/svelte';
   import { selectedElement } from '../../stores/selectedElement.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
   import { updateElementStyle } from '../../utils/updateStyles.js';
+  import { elementStyles } from '../../stores/elementStyles.js';
+  import { get } from 'svelte/store';
 
   const fontSizes = {
     Small: '12px',
@@ -18,34 +19,85 @@
   let selectedAlignment = 'left';
   let textColor = '#000000';
   let previousSelectedElement = null;
+  let selectedComponentType = null;
+  let subElement = 'both'; // New variable to select sub-element
 
-  // Initialize local variables when selectedElement changes
-  $: if ($selectedElement !== previousSelectedElement) {
+  // Determine selectedComponentType
+  $: {
+    const currentSelectedElement = get(selectedElement);
+    if (currentSelectedElement && currentSelectedElement.startsWith('project-')) {
+      selectedComponentType = 'project';
+    } else if (currentSelectedElement === 'user') {
+      selectedComponentType = 'user';
+    } else {
+      selectedComponentType = 'other';
+    }
+  }
+
+  // Initialize local variables when selectedElement or subElement changes
+  $: if ($selectedElement !== previousSelectedElement || subElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
   }
 
   function initializeLocalVariables() {
+    let elementStyle = $selectedElementStyles;
+    if (selectedComponentType === 'project') {
+      // Use the styles for the selected subElement
+      if (subElement === 'title' || subElement === 'description') {
+        elementStyle = $elementStyles[$selectedElement]?.[subElement] || {};
+      } else {
+        elementStyle = {}; // If 'both' is selected, we can't determine a single style
+      }
+    }
+
     selectedFontSize =
       Object.keys(fontSizes).find(
-        (key) => fontSizes[key] === ($selectedElementStyles.fontSize || '16px')
+        (key) => fontSizes[key] === (elementStyle.fontSize || '16px')
       ) || 'Medium';
 
-    selectedAlignment = $selectedElementStyles.textAlign || 'left';
-    textColor = $selectedElementStyles.color || '#000000';
+    selectedAlignment = elementStyle.textAlign || 'left';
+    textColor = elementStyle.color || '#000000';
   }
 
   const updateFontSize = () => {
-    updateElementStyle($selectedElement, 'fontSize', fontSizes[selectedFontSize]);
+    if (selectedComponentType === 'project') {
+      if (subElement === 'title' || subElement === 'both') {
+        updateElementStyle($selectedElement, 'fontSize', fontSizes[selectedFontSize], 'title');
+      }
+      if (subElement === 'description' || subElement === 'both') {
+        updateElementStyle($selectedElement, 'fontSize', fontSizes[selectedFontSize], 'description');
+      }
+    } else {
+      updateElementStyle($selectedElement, 'fontSize', fontSizes[selectedFontSize]);
+    }
   };
 
   const updateAlignment = (alignment) => {
     selectedAlignment = alignment;
-    updateElementStyle($selectedElement, 'textAlign', alignment);
+    if (selectedComponentType === 'project') {
+      if (subElement === 'title' || subElement === 'both') {
+        updateElementStyle($selectedElement, 'textAlign', alignment, 'title');
+      }
+      if (subElement === 'description' || subElement === 'both') {
+        updateElementStyle($selectedElement, 'textAlign', alignment, 'description');
+      }
+    } else {
+      updateElementStyle($selectedElement, 'textAlign', alignment);
+    }
   };
 
   const updateTextColor = () => {
-    updateElementStyle($selectedElement, 'color', textColor);
+    if (selectedComponentType === 'project') {
+      if (subElement === 'title' || subElement === 'both') {
+        updateElementStyle($selectedElement, 'color', textColor, 'title');
+      }
+      if (subElement === 'description' || subElement === 'both') {
+        updateElementStyle($selectedElement, 'color', textColor, 'description');
+      }
+    } else {
+      updateElementStyle($selectedElement, 'color', textColor);
+    }
   };
 </script>
 
@@ -55,6 +107,21 @@
     Text Settings
   </label>
   <div class="collapse-content">
+    {#if selectedComponentType === 'project'}
+      <!-- Sub-Element Selection -->
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Apply to:</span>
+        </label>
+        <select bind:value={subElement} class="select select-bordered">
+          <option value="title">Title</option>
+          <option value="description">Description</option>
+          <option value="both">Both</option>
+        </select>
+      </div>
+      <div class="divider"></div>
+    {/if}
+
     <div class="form-control">
       <label for="font-size-control" class="label">
         <span class="label-text">Font Size</span>
@@ -107,3 +174,7 @@
     </div>
   </div>
 </div>
+
+<style>
+  
+</style>

@@ -6,7 +6,7 @@
   import { mode } from '../../stores/mode.js';
   import { getStyleString } from '../../utils/styleUtils.js';
   import { projects } from '../../stores/projects.js';
-  import { user } from '../../stores/user.js'; // Import user store
+  import { user } from '../../stores/user.js';
 
   export let project;
   export let projectIndex;
@@ -151,8 +151,21 @@
       </div>
     {:else}
       <!-- Display fields for project -->
-      <h2 class="card-title">{project.title}</h2>
-      <p>{project.description}</p>
+      <h2
+        class="card-title"
+        style={getStyleString(
+          $elementStyles[`project-${projectIndex}`]?.title || {}
+        )}
+      >
+        {project.title}
+      </h2>
+      <p
+        style={getStyleString(
+          $elementStyles[`project-${projectIndex}`]?.description || {}
+        )}
+      >
+        {project.description}
+      </p>
       {#if project.project_url}
         <a href={project.project_url} target="_blank" class="text-blue-600 hover:underline">
           View Project
