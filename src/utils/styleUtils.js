@@ -7,6 +7,12 @@ export const cssPropertyMap = {
   width: 'width',
   height: 'height',
   borderRadius: 'border-radius',
+  fontFamily: 'font-family',
+  fontWeight: 'font-weight',
+  textDecoration: 'text-decoration',
+  borderWidth: 'border-width',
+  borderStyle: 'border-style',
+  borderColor: 'border-color',
   // Add more 
 };
 
@@ -18,6 +24,9 @@ export const defaultStyles = {
   width: 'auto',
   height: 'auto',
   borderRadius: '0px',
+  fontFamily: 'Arial',
+  fontWeight: 'normal',
+  textDecoration: 'none',
   // Add more 
 };
 

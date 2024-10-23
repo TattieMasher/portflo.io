@@ -4,12 +4,14 @@
   import BadgeSettings from '../Controls/BadgeSettings.svelte';
   import ImageSettings from '../Controls/ImageSettings.svelte';
   import CarouselSettings from '../Controls/CarouselSettings.svelte';
+  import TypographySettings from '../Controls/TypographySettings.svelte';
   import { selectedElement } from '../../stores/selectedElement.js';
   import { projects } from '../../stores/projects.js';
   import { copiedStyles } from '../../stores/copiedStyles.js';
   import { elementStyles } from '../../stores/elementStyles.js';
   import { addNotification } from '../../stores/notifications.js';
   import { get } from 'svelte/store';
+  import BorderSettings from '../Controls/BorderSettings.svelte';
 
   let selectedComponentType = null;
 
@@ -175,6 +177,11 @@
 
         <!-- Include TextSettings for text components and projects -->
         {#if selectedComponentType === 'text' || selectedComponentType === 'project' || $selectedElement === 'user'}
+          <TypographySettings />
+        {/if}
+
+        <!-- Include TextSettings for text components and projects -->
+        {#if selectedComponentType === 'text' || selectedComponentType === 'project' || $selectedElement === 'user'}
           <TextSettings />
         {/if}
 
@@ -190,6 +197,8 @@
 
         <!-- Include BackgroundSettings for all components -->
         <BackgroundSettings />
+
+        <BorderSettings />
 
         <!-- Include BadgeSettings for the user profile -->
         {#if $selectedElement === 'user'}

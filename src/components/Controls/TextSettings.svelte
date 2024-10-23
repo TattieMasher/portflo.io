@@ -4,7 +4,6 @@
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
   import { updateElementStyle } from '../../utils/updateStyles.js';
   import { elementStyles } from '../../stores/elementStyles.js';
-  import { get } from 'svelte/store';
 
   const fontSizes = {
     Small: '12px',
@@ -21,13 +20,13 @@
   let previousSelectedElement = null;
   let selectedComponentType = null;
   let subElement = 'both'; // New variable to select sub-element
+  let previousSubElement = null;
 
   // Determine selectedComponentType
   $: {
-    const currentSelectedElement = get(selectedElement);
-    if (currentSelectedElement && currentSelectedElement.startsWith('project-')) {
+    if ($selectedElement && $selectedElement.startsWith('project-')) {
       selectedComponentType = 'project';
-    } else if (currentSelectedElement === 'user') {
+    } else if ($selectedElement === 'user') {
       selectedComponentType = 'user';
     } else {
       selectedComponentType = 'other';
@@ -35,8 +34,9 @@
   }
 
   // Initialize local variables when selectedElement or subElement changes
-  $: if ($selectedElement !== previousSelectedElement || subElement) {
+  $: if ($selectedElement !== previousSelectedElement || subElement !== previousSubElement) {
     previousSelectedElement = $selectedElement;
+    previousSubElement = subElement;
     initializeLocalVariables();
   }
 

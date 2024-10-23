@@ -134,7 +134,7 @@
 
 <style>
   .selected {
-    border: 2px solid blue;
+    border: 2px solid blue !important; /* Maybe use outline instead? */
   }
   .masonry-grid {
     column-count: 3;
