@@ -6,19 +6,20 @@
   import { mode } from '../../stores/mode.js';
   import { getStyleString } from '../../utils/styleUtils.js';
   import { projects } from '../../stores/projects.js';
+  import { user } from '../../stores/user.js'; // Import user store
 
   export let project;
   export let projectIndex;
 
   const selectElement = () => {
     selectedElement.set(`project-${projectIndex}`);
-    console.log('Selected Element:', `project-${projectIndex}`);
   };
 
   // Local variables for project properties
   let projectTitle = project.title;
   let projectDescription = project.description;
   let projectURL = project.project_url;
+  let projectSkills = project.skills || [];
 
   // Watch for changes in project properties
   $: if (projectTitle !== project.title) {
@@ -29,6 +30,9 @@
   }
   $: if (projectURL !== project.project_url) {
     projectURL = project.project_url;
+  }
+  $: if (projectSkills !== project.skills) {
+    projectSkills = project.skills || [];
   }
 
   const updateProject = (changes) => {
@@ -57,12 +61,29 @@
   const handleURLChange = (event) => {
     updateProject({ project_url: event.target.value });
   };
+
+  // Handle skills selection
+  const toggleSkill = (skill) => {
+    const skillsSet = new Set(projectSkills);
+    if (skillsSet.has(skill)) {
+      skillsSet.delete(skill);
+    } else {
+      skillsSet.add(skill);
+    }
+    const updatedSkills = Array.from(skillsSet);
+    updateProject({ skills: updatedSkills });
+    projectSkills = updatedSkills;
+  };
+
+  // Get badge class from selectedElementStyles or default
+  let badgeClass = 'badge-primary';
+  $: badgeClass = $selectedElementStyles.badgeClass || 'badge-primary';
 </script>
 
 <div
   id={`project-${projectIndex}`}
   class="card"
-  on:click={$mode === 'edit' ? () => selectElement() : null}
+  on:click={$mode === 'edit' ? selectElement : null}
   class:selected={$mode === 'edit' && $selectedElement === `project-${projectIndex}`}
   style={getStyleString(
     $selectedElement === `project-${projectIndex}`
@@ -108,6 +129,24 @@
             on:input={handleURLChange}
             placeholder="Project URL"
           />
+
+          <!-- Skills Selection -->
+          <label class="label mt-4">
+            <span class="label-text">Project Skill Badges</span>
+          </label>
+          <div class="flex flex-wrap gap-2">
+            {#each $user.skills as skill}
+              <label class="cursor-pointer flex items-center">
+                <input
+                  type="checkbox"
+                  checked={projectSkills.includes(skill)}
+                  on:change={() => toggleSkill(skill)}
+                  class="checkbox checkbox-primary mr-2"
+                />
+                <span>{skill}</span>
+              </label>
+            {/each}
+          </div>
         </div>
       </div>
     {:else}
@@ -118,6 +157,17 @@
         <a href={project.project_url} target="_blank" class="text-blue-600 hover:underline">
           View Project
         </a>
+      {/if}
+
+      <!-- Display associated skills as badges -->
+      {#if project.skills && project.skills.length > 0}
+        <div class="mt-4 flex flex-wrap gap-2">
+          {#each project.skills as skill}
+            <div class="badge {badgeClass}">
+              {skill}
+            </div>
+          {/each}
+        </div>
       {/if}
     {/if}
 

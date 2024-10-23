@@ -73,7 +73,7 @@
 >
   {#if $mode === 'edit'}
     <!-- Component Type Selector -->
-    <div class="form-control w-full max-w-xs">
+    <div class="form-control w-full max-w-96">
       <label class="label">
         <span class="label-text">Component Type</span>
       </label>

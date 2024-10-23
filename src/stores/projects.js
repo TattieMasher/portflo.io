@@ -5,6 +5,7 @@ export const projects = writable([
     title: 'Project 1',
     description: 'Description of project 1',
     project_url: '#',
+    skills: ['JavaScript', 'HTML', 'CSS'],
     containers: [
       {
         layout: 'article',
@@ -36,6 +37,7 @@ export const projects = writable([
     title: 'Project 2',
     description: 'Description of project 2',
     project_url: '#',
+    skills: [],
     containers: [
       {
         layout: 'grid',

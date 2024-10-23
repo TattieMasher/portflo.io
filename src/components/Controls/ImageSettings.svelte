@@ -83,7 +83,7 @@
       </label>
       <input
         type="range"
-        min="0"
+        min="1"
         max="50"
         bind:value={borderRadius}
         class="range range-primary"

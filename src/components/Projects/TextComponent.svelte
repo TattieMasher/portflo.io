@@ -73,14 +73,14 @@
   {#if $mode === 'edit'}
     <!-- Input fields for editing text component -->
     <input
-      class="input input-bordered w-full max-w-xs mt-2"
+      class="input input-bordered w-full max-w-96 mt-2"
       type="text"
       bind:value={component.title}
       on:input={handleTitleChange}
       placeholder="Component Title"
     />
     <textarea
-      class="textarea textarea-bordered w-full max-w-xs mt-2"
+      class="textarea textarea-bordered w-full max-w-96 mt-2"
       bind:value={component.content}
       on:input={handleContentChange}
       placeholder="Component Content"
