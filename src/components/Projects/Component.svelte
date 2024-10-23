@@ -2,6 +2,7 @@
   import TextComponent from './TextComponent.svelte';
   import ImageComponent from './ImageComponent.svelte';
   import CarouselComponent from './CarouselComponent.svelte';
+  import VideoComponent from './VideoComponent.svelte';
   import { selectedElement } from '../../stores/selectedElement.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
   import { elementStyles } from '../../stores/elementStyles.js';
@@ -16,7 +17,6 @@
 
   const selectElement = () => {
     selectedElement.set(`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
-    console.log('Selected Element:', `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
   };
 
   const handleTypeChange = (event) => {
@@ -46,6 +46,8 @@
       return updatedProjects;
     });
   };
+
+  const componentTypes = ['text', 'image', 'carousel', 'video'];
 </script>
 
 <div
@@ -82,9 +84,9 @@
         bind:value={component.type}
         on:change={handleTypeChange}
       >
-        <option value="text">Text</option>
-        <option value="image">Image</option>
-        <option value="carousel">Carousel</option>
+        {#each componentTypes as type}
+          <option value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
+        {/each}
       </select>
     </div>
   {/if}
@@ -111,11 +113,18 @@
       {projectIndex}
       {containerIndex}
     />
+  {:else if component.type === 'video'}
+    <VideoComponent
+      {component}
+      {componentIndex}
+      {projectIndex}
+      {containerIndex}
+    />
   {/if}
 </div>
 
 <style>
   .selected {
-    border: 2px solid blue !important; /* Maybe use outline instead? */
+    border: 2px solid blue !important;
   }
 </style>

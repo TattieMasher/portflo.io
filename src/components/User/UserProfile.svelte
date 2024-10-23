@@ -97,7 +97,7 @@
         </label>
         <div class="flex flex-wrap gap-2">
           {#each $user.skills as skill, index}
-            <div class="badge {badgeClass} flex items-center">
+            <div class="badge {badgeClass} flex items-center py-2">
               {skill}
               <button class="ml-1" on:click={() => removeSkill(index)}>
                 <Icon icon="mdi:close" class="inline-block w-4 h-4" />
