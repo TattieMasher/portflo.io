@@ -1,7 +1,6 @@
-<!-- components/Controls/ImageSettings.svelte -->
 <script>
   import { selectedElement } from '../../stores/selectedElement.js';
-  import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
+  import { elementStyles } from '../../stores/elementStyles.js';
   import { updateElementStyle } from '../../utils/updateStyles.js';
 
   let imageWidth = 100; // Percentage value
@@ -9,40 +8,41 @@
   let borderRadius = 0; // Percentage value
   let previousSelectedElement = null;
 
-  // Initialize local variables when selectedElement changes
+  // Initialize local variables when selectedElement or elementStyles change
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
   }
 
   function initializeLocalVariables() {
-    // Initialize imageWidth
-    if ($selectedElementStyles.width && $selectedElementStyles.width.endsWith('%')) {
-      imageWidth = parseInt($selectedElementStyles.width);
+    const styles = $elementStyles[$selectedElement]?.image || {};
+    if (styles.width && styles.width.endsWith('%')) {
+      imageWidth = parseInt(styles.width);
     } else {
       imageWidth = 100;
     }
 
-    imageHeight = $selectedElementStyles.height || 'auto';
-    borderRadius = parseInt($selectedElementStyles.borderRadius) || 0;
+    imageHeight = styles.height || 'auto';
+    borderRadius = parseInt(styles.borderRadius) || 0;
   }
 
   // Reactive statement to update image styles
   $: {
-    updateElementStyle($selectedElement, 'width', `${imageWidth}%`);
+    updateElementStyle($selectedElement, 'width', `${imageWidth}%`, 'image');
     updateElementStyle(
       $selectedElement,
       'height',
-      imageHeight === 'auto' ? 'auto' : `${imageHeight}px`
+      imageHeight === 'auto' ? 'auto' : `${imageHeight}px`,
+      'image'
     );
-    updateElementStyle($selectedElement, 'borderRadius', `${borderRadius}%`);
+    updateElementStyle($selectedElement, 'borderRadius', `${borderRadius}%`, 'image');
   }
 
   const updateHeight = () => {
     if (imageHeight === 'auto') {
-      updateElementStyle($selectedElement, 'height', 'auto');
+      updateElementStyle($selectedElement, 'height', 'auto', 'image');
     } else {
-      updateElementStyle($selectedElement, 'height', `${imageHeight}px`);
+      updateElementStyle($selectedElement, 'height', `${imageHeight}px`, 'image');
     }
   };
 </script>

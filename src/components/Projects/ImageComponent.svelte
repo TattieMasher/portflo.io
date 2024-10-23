@@ -2,7 +2,6 @@
   import { projects } from '../../stores/projects.js';
   import { mode } from '../../stores/mode.js';
   import { selectedElement } from '../../stores/selectedElement.js';
-  import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
   import { elementStyles } from '../../stores/elementStyles.js';
   import { getStyleString } from '../../utils/styleUtils.js';
 
@@ -11,8 +10,10 @@
   export let projectIndex;
   export let containerIndex;
 
+  const componentId = `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`;
+
   const selectElement = () => {
-    selectedElement.set(`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
+    selectedElement.set(componentId);
   };
 
   const handleImageUpload = (event) => {
@@ -49,15 +50,27 @@
       return updatedProjects;
     });
   };
+
+  // Get styles for container and image
+  $: containerStyles =
+    $elementStyles[componentId] && !$elementStyles[componentId]['image']
+      ? $elementStyles[componentId]
+      : {};
+
+  $: imageStyles =
+    ($elementStyles[componentId] && $elementStyles[componentId]['image']) || {};
 </script>
 
 <div
+  id={componentId}
   on:click={(e) => {
     if ($mode === 'edit') {
       e.stopPropagation();
       selectElement();
     }
   }}
+  class:selected={$mode === 'edit' && $selectedElement === componentId}
+  style={getStyleString(containerStyles)}
 >
   {#if $mode === 'edit'}
     <!-- Image Upload -->
@@ -74,23 +87,11 @@
       />
       {#if component.content}
         <img
-          id={`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
+          id={`${componentId}-image`}
           src={component.content}
           alt=""
           class="mt-2 max-w-xs"
-          class:selected={
-            $mode === 'edit' &&
-            $selectedElement ===
-              `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
-          }
-          style={getStyleString(
-            $selectedElement ===
-              `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
-              ? $selectedElementStyles
-              : $elementStyles[
-                  `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
-                ] || {}
-          )}
+          style={getStyleString(imageStyles)}
           on:click={(e) => {
             if ($mode === 'edit') {
               e.stopPropagation();
@@ -101,21 +102,14 @@
       {/if}
     </div>
   {:else}
-    <!-- Display fields for component -->
+    <!-- Display the image -->
     {#if component.content}
       <img
-        id={`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
+        id={`${componentId}-image`}
         src={component.content}
         alt={component.title}
         class="max-w-full h-auto"
-        style={getStyleString(
-          $selectedElement ===
-            `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
-            ? $selectedElementStyles
-            : $elementStyles[
-                `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
-              ] || {}
-        )}
+        style={getStyleString(imageStyles)}
       />
     {/if}
   {/if}

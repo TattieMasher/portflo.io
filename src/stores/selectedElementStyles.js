@@ -6,6 +6,7 @@ import { defaultStyles } from '../utils/styleUtils.js';
 export const selectedElementStyles = derived(
   [selectedElement, elementStyles],
   ([$selectedElement, $elementStyles]) => {
-    return { ...defaultStyles, ...($elementStyles[$selectedElement] || {}) };
+    const elementStyle = $elementStyles[$selectedElement] || {};
+    return { ...defaultStyles, ...elementStyle };
   }
 );
