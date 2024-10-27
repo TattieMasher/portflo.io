@@ -1,4 +1,3 @@
-<!-- components/User/UserProfile.svelte -->
 <script>
   import { selectedElement } from '../../stores/selectedElement.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
@@ -7,6 +6,7 @@
   import { getStyleString } from '../../utils/styleUtils.js';
   import { user } from '../../stores/user.js';
   import Icon from '@iconify/svelte';
+  import { badgeClass } from '../../stores/badgeClass.js';
 
   const selectElement = () => {
     selectedElement.set('user');
@@ -45,11 +45,6 @@
       reader.readAsDataURL(file);
     }
   };
-
-  // Local variable for badgeClass
-  let badgeClass = 'badge-primary';
-
-  $: badgeClass = $selectedElementStyles.badgeClass || 'badge-primary';
 </script>
 
 <svelte:head>
@@ -97,7 +92,7 @@
         </label>
         <div class="flex flex-wrap gap-2">
           {#each $user.skills as skill, index}
-            <div class="badge {badgeClass} flex items-center py-2">
+            <div class="badge {$badgeClass} flex items-center py-2">
               {skill}
               <button class="ml-1" on:click={() => removeSkill(index)}>
                 <Icon icon="mdi:close" class="inline-block w-4 h-4" />
@@ -125,7 +120,7 @@
       {#if $user.skills && $user.skills.length > 0}
         <div class="mt-4 flex flex-wrap gap-2 justify-center">
           {#each $user.skills as skill}
-            <div class="badge {badgeClass}">
+            <div class="badge {$badgeClass}">
               {skill}
             </div>
           {/each}

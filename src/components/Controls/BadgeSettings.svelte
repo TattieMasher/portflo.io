@@ -1,8 +1,5 @@
-<!-- components/Controls/BadgeSettings.svelte -->
 <script>
-  import { selectedElement } from '../../stores/selectedElement.js';
-  import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
-  import { updateElementStyle } from '../../utils/updateStyles.js';
+  import { badgeClass } from '../../stores/badgeClass.js';
 
   const presetThemes = [
     { name: 'Primary', class: 'badge-primary' },
@@ -14,8 +11,8 @@
     { name: 'Info', class: 'badge-info' },
   ];
 
-  const updateBadgeClass = (badgeClass) => {
-    updateElementStyle($selectedElement, 'badgeClass', badgeClass);
+  const updateBadgeClass = (newClass) => {
+    badgeClass.set(newClass);
   };
 </script>
 

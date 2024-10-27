@@ -7,6 +7,7 @@
   import { getStyleString } from '../../utils/styleUtils.js';
   import { projects } from '../../stores/projects.js';
   import { user } from '../../stores/user.js';
+  import { badgeClass } from '../../stores/badgeClass.js';
 
   export let project;
   export let projectIndex;
@@ -64,6 +65,10 @@
 
   // Handle skills selection
   const toggleSkill = (skill) => {
+    if (!$user.skills.includes(skill)) {
+      // Skill is no longer available in user.skills
+      return;
+    }
     const skillsSet = new Set(projectSkills);
     if (skillsSet.has(skill)) {
       skillsSet.delete(skill);
@@ -75,9 +80,14 @@
     projectSkills = updatedSkills;
   };
 
-  // Get badge class from selectedElementStyles or default
-  let badgeClass = 'badge-primary';
-  $: badgeClass = $selectedElementStyles.badgeClass || 'badge-primary';
+  // Watch for changes in $user.skills
+  $: {
+    const validSkills = projectSkills.filter((skill) => $user.skills.includes(skill));
+    if (validSkills.length !== projectSkills.length) {
+      projectSkills = validSkills;
+      updateProject({ skills: validSkills });
+    }
+  }
 </script>
 
 <div
@@ -176,9 +186,11 @@
       {#if project.skills && project.skills.length > 0}
         <div class="mt-4 flex flex-wrap gap-2">
           {#each project.skills as skill}
-            <div class="badge {badgeClass}">
-              {skill}
-            </div>
+            {#if $user.skills.includes(skill)}
+              <div class="badge {$badgeClass}">
+                {skill}
+              </div>
+            {/if}
           {/each}
         </div>
       {/if}
