@@ -1,41 +1,28 @@
-<!-- components/Controls/LayoutSettings.svelte -->
 <script>
   import { selectedElement } from '../../stores/selectedElement.js';
   import { projects } from '../../stores/projects.js';
   import { updateContainerProperty } from '../../utils/updateContainerProperty.js';
 
-  let numColumns = 2;
-  let gapSize = '1rem';
-  let centeredComponents = false;
-  let previousSelectedElement = null;
+  import ArticleSettings from './LayoutSettings/ArticleSettings.svelte';
+  import GridSettings from './LayoutSettings/GridSettings.svelte';
+  import CarouselSettings from './LayoutSettings/CarouselSettings.svelte';
+  import TimelineSettings from './LayoutSettings/TimelineSettings.svelte';
+  import MasonrySettings from './LayoutSettings/MasonrySettings.svelte';
+
   let containerLayout = null;
+  let previousSelectedElement = null;
 
   // Initialize local variables when selectedElement changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
-    initializeLocalVariables();
+    initializeLayoutType();
   }
 
-  function initializeLocalVariables() {
+  function initializeLayoutType() {
     const [projectIndex, containerIndex] = getIndicesFromElementId($selectedElement);
     if (projectIndex !== null && containerIndex !== null) {
       const container = $projects[projectIndex]?.containers[containerIndex];
       containerLayout = container?.layout || null;
-
-      if (containerLayout === 'grid') {
-        numColumns = container?.numColumns || 2;
-        gapSize = container?.gapSize || '1rem';
-      } else if (containerLayout === 'article') {
-        centeredComponents = container?.centeredComponents || false;
-      }
-      // Add other layouts and their settings here
-    }
-  }
-
-  function updateContainerSetting(property, value) {
-    const [projectIndex, containerIndex] = getIndicesFromElementId($selectedElement);
-    if (projectIndex !== null && containerIndex !== null) {
-      updateContainerProperty(projectIndex, containerIndex, property, value);
     }
   }
 
@@ -50,15 +37,6 @@
     }
     return [null, null];
   }
-
-  // Reactive statements to update container settings
-  $: if (containerLayout === 'grid') {
-    updateContainerSetting('numColumns', numColumns);
-    updateContainerSetting('gapSize', gapSize);
-  } else if (containerLayout === 'article') {
-    updateContainerSetting('centeredComponents', centeredComponents);
-  }
-  // Add reactive statements for other layouts here
 </script>
 
 <div class="collapse collapse-arrow bg-base-200">
@@ -68,44 +46,17 @@
   </label>
   <div class="collapse-content">
     {#if containerLayout === 'grid'}
-      <!-- Settings for Grid Layout -->
-      <div class="form-control">
-        <!-- Number of Columns -->
-        <label class="label">
-          <span class="label-text">Number of Columns</span>
-        </label>
-        <input
-          type="number"
-          min="1"
-          max="6"
-          bind:value={numColumns}
-          class="input input-bordered"
-        />
-
-        <!-- Gap Size -->
-        <label class="label mt-4">
-          <span class="label-text">Gap Size (e.g., 1rem, 10px)</span>
-        </label>
-        <input
-          type="text"
-          placeholder="e.g., 1rem, 10px"
-          bind:value={gapSize}
-          class="input input-bordered"
-        />
-      </div>
+      <GridSettings />
     {:else if containerLayout === 'article'}
-      <!-- Settings for Article Layout -->
-      <div class="form-control">
-        <label class="cursor-pointer label">
-          <span class="label-text">Center Components</span>
-          <input
-            type="checkbox"
-            class="checkbox checkbox-info"
-            bind:checked={centeredComponents}
-          />
-        </label>
-      </div>
+      <ArticleSettings />
+    {:else if containerLayout === 'carousel'}
+      <CarouselSettings />
+    {:else if containerLayout === 'timeline'}
+      <TimelineSettings />
+    {:else if containerLayout === 'masonry'}
+      <MasonrySettings />
+    {:else}
+      <p>No layout-specific settings available.</p>
     {/if}
-    <!-- TODO: Settings for other layouts -->
   </div>
 </div>
