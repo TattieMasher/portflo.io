@@ -201,7 +201,7 @@
         <BorderSettings />
 
         <!-- Include BadgeSettings for the user profile -->
-        {#if $selectedElement === 'user'}
+        {#if $selectedElement === 'user' || selectedComponentType === 'project'}
           <BadgeSettings />
         {/if}
 
