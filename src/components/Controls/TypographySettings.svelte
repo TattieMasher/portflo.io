@@ -2,15 +2,14 @@
   import { selectedElement } from '../../stores/selectedElement.js';
   import { updateElementStyle } from '../../utils/updateStyles.js';
   import { elementStyles } from '../../stores/elementStyles.js';
+  import { googleFonts } from '../../utils/googleFonts.js';
 
   let fontFamily = 'Arial';
-  let fontWeight = 'normal';
+  let fontWeight = '400';
   let textDecoration = 'none';
   let previousSelectedElement = null;
 
-  const fontFamilies = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Georgia'];
-  const fontWeights = ['normal', 'bold', 'bolder', 'lighter'];
-  const textDecorations = ['none', 'underline', 'overline', 'line-through'];
+  let availableFontWeights = ['400']; // Default font weights
 
   // Initialize local variables when selectedElement changes
   $: if ($selectedElement !== previousSelectedElement) {
@@ -21,8 +20,14 @@
   function initializeLocalVariables() {
     const styles = $elementStyles[$selectedElement] || {};
     fontFamily = styles.fontFamily || 'Arial';
-    fontWeight = styles.fontWeight || 'normal';
+    fontWeight = styles.fontWeight || '400';
     textDecoration = styles.textDecoration || 'none';
+  }
+
+  // Update available font weights when fontFamily changes
+  $: {
+    const selectedFont = googleFonts.find((font) => font.name === fontFamily);
+    availableFontWeights = selectedFont ? selectedFont.weights : ['400'];
   }
 
   $: {
@@ -44,8 +49,10 @@
         <span class="label-text">Font Family</span>
       </label>
       <select bind:value={fontFamily} class="select select-bordered">
-        {#each fontFamilies as family}
-          <option value={family}>{family}</option>
+        {#each googleFonts as font}
+          <option value={font.name} style="font-family: '{font.name}', sans-serif;">
+            {font.name}
+          </option>
         {/each}
       </select>
 
@@ -54,8 +61,8 @@
         <span class="label-text">Font Weight</span>
       </label>
       <select bind:value={fontWeight} class="select select-bordered">
-        {#each fontWeights as weight}
-          <option value={weight}>{weight.charAt(0).toUpperCase() + weight.slice(1)}</option>
+        {#each availableFontWeights as weight}
+          <option value={weight}>{weight}</option>
         {/each}
       </select>
 
@@ -64,9 +71,10 @@
         <span class="label-text">Text Decoration</span>
       </label>
       <select bind:value={textDecoration} class="select select-bordered">
-        {#each textDecorations as decoration}
-          <option value={decoration}>{decoration.charAt(0).toUpperCase() + decoration.slice(1)}</option>
-        {/each}
+        <option value="none">None</option>
+        <option value="underline">Underline</option>
+        <option value="overline">Overline</option>
+        <option value="line-through">Line-through</option>
       </select>
     </div>
   </div>
