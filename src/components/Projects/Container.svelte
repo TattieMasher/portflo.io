@@ -85,14 +85,14 @@
   <!-- Render components based on container layout -->
   {#if container.layout === 'article'}
     <!-- Article Layout -->
-    <article>
+    <article class={container.centeredComponents ? 'text-center' : ''}>
       {#each container.components as component, componentIndex}
         <Component {component} {componentIndex} {projectIndex} {containerIndex} />
       {/each}
     </article>
   {:else if container.layout === 'grid'}
     <!-- Grid Layout -->
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid" style="grid-template-columns: repeat({container.numColumns || 2}, 1fr); gap: {container.gapSize || '1rem'};">
       {#each container.components as component, componentIndex}
         <Component {component} {componentIndex} {projectIndex} {containerIndex} />
       {/each}

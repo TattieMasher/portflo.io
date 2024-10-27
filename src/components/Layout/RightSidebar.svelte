@@ -1,4 +1,5 @@
 <script>
+  import LayoutSettings from '../Controls/LayoutSettings.svelte';
   import TextSettings from '../Controls/TextSettings.svelte';
   import BackgroundSettings from '../Controls/BackgroundSettings.svelte';
   import BadgeSettings from '../Controls/BadgeSettings.svelte';
@@ -32,7 +33,7 @@
       } else if (parts[2] === 'container') {
         const containerIndex = parseInt(parts[3]);
         const container = project?.containers?.[containerIndex];
-        selectedComponentType = container?.layout || 'container';
+        selectedComponentType = 'container'; // Set to 'container' when a container is selected
       } else {
         selectedComponentType = 'project';
       }
@@ -160,7 +161,7 @@
   };
 </script>
 
-{#if selectedComponentType} 
+{#if selectedComponentType}
   <aside class="menu p-4 w-80 bg-gray-800 text-white h-full overflow-y-auto">
     <ul class="space-y-4">
       <li class="menu-title">
@@ -175,13 +176,14 @@
           <button class="btn btn-sm btn-outline btn-accent w-1/2" on:click={pasteStyles}>Paste Style</button>
         </div>
 
-        <!-- Include TextSettings for text components and projects -->
-        {#if selectedComponentType === 'text' || selectedComponentType === 'project' || $selectedElement === 'user'}
-          <TypographySettings />
+        <!-- Show LayoutSettings only for containers -->
+        {#if selectedComponentType === 'container'}
+          <LayoutSettings />
         {/if}
 
         <!-- Include TextSettings for text components and projects -->
         {#if selectedComponentType === 'text' || selectedComponentType === 'project' || $selectedElement === 'user'}
+          <TypographySettings />
           <TextSettings />
         {/if}
 
@@ -200,7 +202,7 @@
 
         <BorderSettings />
 
-        <!-- Include BadgeSettings for the user profile -->
+        <!-- Include BadgeSettings for the user profile and project -->
         {#if $selectedElement === 'user' || selectedComponentType === 'project'}
           <BadgeSettings />
         {/if}
