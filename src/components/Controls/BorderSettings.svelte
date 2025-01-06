@@ -2,6 +2,7 @@
   import { selectedElement } from '../../stores/selectedElement.js';
   import { updateElementStyle } from '../../utils/updateStyles.js';
   import { elementStyles } from '../../stores/elementStyles.js';
+  import RangeSetting from './Modules/RangeSetting.svelte';
 
   let borderWidth = 0;
   let borderStyle = 'solid';
@@ -38,15 +39,13 @@
   <div class="collapse-content">
     <div class="form-control">
       <!-- Border Width Slider -->
-      <label class="label">
-        <span class="label-text">Border Width: {borderWidth}px</span>
-      </label>
-      <input
-        type="range"
-        min="0"
-        max="20"
-        bind:value={borderWidth}
-        class="range range-secondary"
+      <RangeSetting
+        label="Border Width"
+        min={0}
+        max={20}
+        value={borderWidth}
+        unit="px"
+        onChange={(val) => updateElementStyle($selectedElement, 'borderWidth', `${val}px`)}
       />
 
       <!-- Border Style Selector -->

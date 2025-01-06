@@ -2,6 +2,7 @@
   import { selectedElement } from '../../stores/selectedElement.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
   import { updateElementStyle } from '../../utils/updateStyles.js';
+  import RangeSetting from './Modules/RangeSetting.svelte';
 
   let isTransparent = false;
   let backgroundColor = '#ffffff';
@@ -63,16 +64,13 @@
         />
 
         <!-- Border Radius Slider -->
-        <label for="border-radius-control" class="label mt-4">
-          <span class="label-text">Border Radius: {borderRadius}px</span>
-        </label>
-        <input
-          id="border-radius-control"
-          type="range"
-          min="0"
-          max="50"
-          bind:value={borderRadius}
-          class="range range-secondary"
+        <RangeSetting
+          label="Border Radius"
+          min={0}
+          max={50}
+          value={borderRadius}
+          unit="px"
+          onChange={(val) => updateElementStyle($selectedElement, 'borderRadius', `${val}px`)}
         />
       {/if}
     </div>
