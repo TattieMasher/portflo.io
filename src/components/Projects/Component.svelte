@@ -17,6 +17,7 @@
 
   const selectElement = () => {
     selectedElement.set(`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
+    console.log('Selected Element:', `project-${projectIndex}-component-${componentIndex}`);
   };
 
   const handleTypeChange = (event) => {
