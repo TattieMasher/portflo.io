@@ -12,7 +12,6 @@
   let visibleSlides = 1;
   let previousSelectedElement = null;
 
-  // Initialize local variables when selectedElement changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
@@ -51,7 +50,6 @@
     return [null, null];
   }
 
-  // Reactive statements to update properties
   $: updateLayoutSetting('transitionSpeed', transitionSpeed);
   $: updateLayoutSetting('autoplay', autoplay);
   $: updateLayoutSetting('looping', looping);

@@ -1,4 +1,3 @@
-<!-- components/Controls/LayoutSettings/ArticleSettings.svelte -->
 <script>
   import { selectedElement } from '../../../stores/selectedElement.js';
   import { projects } from '../../../stores/projects.js';
@@ -7,7 +6,6 @@
   let centeredComponents = false;
   let previousSelectedElement = null;
 
-  // Initialize local variables when selectedElement changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
@@ -40,7 +38,6 @@
     return [null, null];
   }
 
-  // Reactive statement to update centeredComponents
   $: updateLayoutSetting('centeredComponents', centeredComponents);
 </script>
 

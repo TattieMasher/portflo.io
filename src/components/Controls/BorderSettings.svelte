@@ -11,7 +11,6 @@
 
   const borderStyles = ['none', 'solid', 'dashed', 'dotted', 'double', 'groove', 'ridge'];
 
-  // Initialize local variables when selectedElement changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();

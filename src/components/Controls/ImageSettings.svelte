@@ -8,7 +8,6 @@
   let borderRadius = 0; // Percentage value
   let previousSelectedElement = null;
 
-  // Initialize local variables when selectedElement or elementStyles change
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
@@ -26,7 +25,6 @@
     borderRadius = parseInt(styles.borderRadius) || 0;
   }
 
-  // Reactive statement to update image styles
   $: {
     updateElementStyle($selectedElement, 'width', `${imageWidth}%`, 'image');
     updateElementStyle(

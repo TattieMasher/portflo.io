@@ -6,10 +6,9 @@
 
   let isTransparent = false;
   let backgroundColor = '#ffffff';
-  let borderRadius = 0; // Now a number representing pixels
+  let borderRadius = 0; // number representing pixels
   let previousSelectedElement = null;
 
-  // Initialize local variables when selectedElement changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
@@ -20,8 +19,7 @@
     isTransparent = !backgroundColor || backgroundColor === 'transparent';
     borderRadius = parseInt($selectedElementStyles.borderRadius) || 0;
   }
-
-  // Reactive statement to update background color and border radius
+  
   $: {
     const color = isTransparent ? 'transparent' : backgroundColor;
     updateElementStyle($selectedElement, 'backgroundColor', color);
@@ -29,7 +27,7 @@
     if (!isTransparent) {
       updateElementStyle($selectedElement, 'borderRadius', `${borderRadius}px`);
     } else {
-      // Reset border radius when background is transparent
+      // Reset border radius to 0px when background is transparent
       updateElementStyle($selectedElement, 'borderRadius', '0px');
     }
   }

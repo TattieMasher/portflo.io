@@ -1,4 +1,3 @@
-<!-- components/Controls/ImageSettings.svelte -->
 <script>
   import { selectedElement } from '../../stores/selectedElement.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';

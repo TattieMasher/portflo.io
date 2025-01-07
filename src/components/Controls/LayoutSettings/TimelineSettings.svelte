@@ -3,16 +3,15 @@
   import { projects } from '../../../stores/projects.js';
   import { updateContainerProperty } from '../../../utils/updateContainerProperty.js';
 
-  let orientation = 'vertical'; // 'vertical' or 'horizontal'
+  let orientation = 'vertical';
   let alternatingSides = true;
-  let connectorStyle = 'solid'; // 'solid', 'dashed', etc.
-  let iconSize = 30; // in pixels
+  let connectorStyle = 'solid';
+  let iconSize = 30
   let iconColor = '#2196f3';
   let eventSpacing = '1rem';
   let highlightCurrent = true;
   let previousSelectedElement = null;
 
-  // Initialize local variables when selectedElement changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();

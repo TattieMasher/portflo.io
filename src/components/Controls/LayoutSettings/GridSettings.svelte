@@ -7,7 +7,6 @@
   let gapSize = '1rem';
   let previousSelectedElement = null;
 
-  // Initialize local variables when selectedElement changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
@@ -41,7 +40,6 @@
     return [null, null];
   }
 
-  // Reactive statements to update numColumns and gapSize
   $: updateLayoutSetting('numColumns', numColumns);
   $: updateLayoutSetting('gapSize', gapSize);
 </script>

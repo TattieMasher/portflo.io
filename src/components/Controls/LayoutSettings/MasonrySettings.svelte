@@ -7,11 +7,10 @@
   let columnGap = '1rem';
   let itemGap = '1rem';
   let responsiveAdjustments = true;
-  let alignment = 'left'; // 'left', 'center', 'right'
+  let alignment = 'left';
   let dynamicItemSizing = true;
   let previousSelectedElement = null;
 
-  // Initialize local variables when selectedElement changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
@@ -49,7 +48,6 @@
     return [null, null];
   }
 
-  // Reactive statements to update properties
   $: updateLayoutSetting('columnCount', columnCount);
   $: updateLayoutSetting('columnGap', columnGap);
   $: updateLayoutSetting('itemGap', itemGap);
