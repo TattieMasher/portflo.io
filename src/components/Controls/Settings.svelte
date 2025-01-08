@@ -17,12 +17,16 @@
     image: [ImageSettings, BackgroundSettings, BorderSettings],
     carousel: [CarouselSettings, BackgroundSettings, BorderSettings],
     video: [BackgroundSettings, BorderSettings],
-    container: [LayoutSettings, BackgroundSettings, BorderSettings],
+    container: [TextSettings, LayoutSettings, BackgroundSettings, BorderSettings],
     project: [TypographySettings, TextSettings, BackgroundSettings, BorderSettings, BadgeSettings],
     user: [BadgeSettings, TypographySettings],
   };
 
   $: modulesToRender = settingsMap[selectedComponentType] || [];
+  $: {
+    console.log('selectedComponentType:', selectedComponentType, 'modulesToRender:', modulesToRender);
+    console.log(selectedComponentType);
+  }
 </script>
 
 <div class="settings-container">

@@ -1,4 +1,3 @@
-// utils/googleFonts.js
 export const googleFonts = [
   { name: 'Montaga', weights: ['400'] },
   { name: 'Montserrat', weights: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] },
