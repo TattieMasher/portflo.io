@@ -1,4 +1,3 @@
-// utils/updateStyles.js
 import { elementStyles } from '../stores/elementStyles.js';
 
 export function updateElementStyle(elementId, property, value, subElement = null) {
