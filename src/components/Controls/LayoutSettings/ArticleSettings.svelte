@@ -1,11 +1,14 @@
 <script>
-  import { selectedElement } from '../../../stores/selectedElement.js';
-  import { projects } from '../../../stores/projects.js';
+  import { rootStore } from '../../../stores/rootStore';
   import { updateContainerProperty } from '../../../utils/updateContainerProperty.js';
+  import { get } from 'svelte/store';
+
+  const { selectedElement, projects } = rootStore;
 
   let centeredComponents = false;
   let previousSelectedElement = null;
 
+  // Initialize local variables when the selected element changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
@@ -38,6 +41,7 @@
     return [null, null];
   }
 
+  // Reactive update
   $: updateLayoutSetting('centeredComponents', centeredComponents);
 </script>
 

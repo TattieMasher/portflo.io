@@ -1,12 +1,14 @@
 <script>
-  import { selectedElement } from '../../../stores/selectedElement.js';
-  import { projects } from '../../../stores/projects.js';
+  import { rootStore } from '../../../stores/rootStore';
   import { updateContainerProperty } from '../../../utils/updateContainerProperty.js';
+
+  const { selectedElement, projects } = rootStore;
 
   let numColumns = 2;
   let gapSize = '1rem';
   let previousSelectedElement = null;
 
+  // Initialize local variables when the selected element changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
@@ -40,6 +42,7 @@
     return [null, null];
   }
 
+  // Reactive updates
   $: updateLayoutSetting('numColumns', numColumns);
   $: updateLayoutSetting('gapSize', gapSize);
 </script>

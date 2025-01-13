@@ -1,17 +1,19 @@
 <script>
-  import { selectedElement } from '../../../stores/selectedElement.js';
-  import { projects } from '../../../stores/projects.js';
+  import { rootStore } from '../../../stores/rootStore';
   import { updateContainerProperty } from '../../../utils/updateContainerProperty.js';
+
+  const { selectedElement, projects } = rootStore;
 
   let orientation = 'vertical';
   let alternatingSides = true;
   let connectorStyle = 'solid';
-  let iconSize = 30
+  let iconSize = 30;
   let iconColor = '#2196f3';
   let eventSpacing = '1rem';
   let highlightCurrent = true;
   let previousSelectedElement = null;
 
+  // Initialize local variables when the selected element changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
@@ -50,7 +52,7 @@
     return [null, null];
   }
 
-  // Reactive statements to update properties
+  // Reactive updates for container properties
   $: updateLayoutSetting('orientation', orientation);
   $: updateLayoutSetting('alternatingSides', alternatingSides);
   $: updateLayoutSetting('connectorStyle', connectorStyle);
