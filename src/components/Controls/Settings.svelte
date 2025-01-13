@@ -31,13 +31,16 @@
 
 <div class="settings-container">
   {#if modulesToRender.length > 0}
-    {#each modulesToRender as Module}
-      <svelte:component this={Module} {...(settingsConfig[Module.name] || {})} key={selectedComponentType} />
-    {/each}
+    {#key selectedComponentType}
+      {#each modulesToRender as Module}
+        <svelte:component this={Module} {...(settingsConfig[Module.name] || {})} />
+      {/each}
+    {/key}
   {:else}
     <p>No settings available for this element.</p>
   {/if}
 </div>
+
 
 
 <style>
