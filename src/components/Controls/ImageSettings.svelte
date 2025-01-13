@@ -1,4 +1,5 @@
 <script>
+  import RangeSetting from './Modules/RangeSetting.svelte';
   import { rootStore } from '../../stores/rootStore';
   import { updateElementStyle } from '../../utils/updateStyles.js';
 
@@ -31,16 +32,6 @@
     'image'
   );
   $: updateElementStyle($selectedElement, 'borderRadius', `${borderRadius}%`, 'image');
-
-  // Update height explicitly
-  const updateHeight = () => {
-    updateElementStyle(
-      $selectedElement,
-      'height',
-      imageHeight === 'auto' ? 'auto' : `${imageHeight}px`,
-      'image'
-    );
-  };
 </script>
 
 <div class="collapse collapse-arrow bg-base-200">
@@ -50,45 +41,33 @@
   </label>
   <div class="collapse-content">
     <!-- Width Setting -->
-    <div class="form-control">
-      <label class="label">
-        <span class="label-text">Width: {imageWidth}%</span>
-      </label>
-      <input
-        type="range"
-        min="0"
-        max="100"
-        bind:value={imageWidth}
-        class="range range-primary"
-      />
-    </div>
+    <RangeSetting
+      label="Width"
+      min={0}
+      max={100}
+      value={imageWidth}
+      unit="%"
+      onChange={(val) => (imageWidth = val)}
+    />
 
     <!-- Height Setting -->
-    <div class="form-control mt-4">
-      <label class="label">
-        <span class="label-text">Height (px)</span>
-      </label>
-      <input
-        type="text"
-        class="input input-bordered"
-        bind:value={imageHeight}
-        on:input={updateHeight}
-        placeholder="e.g., auto, 200"
-      />
-    </div>
+    <RangeSetting
+      label="Height"
+      min={50}
+      max={500}
+      value={parseInt(imageHeight) || 50}
+      unit="px"
+      onChange={(val) => (imageHeight = `${val}px`)}
+    />
 
     <!-- Border Radius Setting -->
-    <div class="form-control mt-4">
-      <label class="label">
-        <span class="label-text">Border Radius: {borderRadius}%</span>
-      </label>
-      <input
-        type="range"
-        min="1"
-        max="50"
-        bind:value={borderRadius}
-        class="range range-primary"
-      />
-    </div>
+    <RangeSetting
+      label="Border Radius"
+      min={0}
+      max={50}
+      value={borderRadius}
+      unit="%"
+      onChange={(val) => (borderRadius = val)}
+    />
   </div>
 </div>

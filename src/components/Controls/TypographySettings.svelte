@@ -1,4 +1,5 @@
 <script>
+  import DropdownSelect from './Modules/DropdownSelect.svelte';
   import { rootStore } from '../../stores/rootStore';
   import { updateElementStyle } from '../../utils/updateStyles.js';
   import { googleFonts } from '../../utils/googleFonts.js';
@@ -44,39 +45,33 @@
     Typography Settings
   </label>
   <div class="collapse-content">
-    <div class="form-control">
-      <!-- Font Family Selector -->
-      <label class="label">
-        <span class="label-text">Font Family</span>
-      </label>
-      <select bind:value={fontFamily} class="select select-bordered">
-        {#each googleFonts as font}
-          <option value={font.name} style="font-family: '{font.name}', sans-serif;">
-            {font.name}
-          </option>
-        {/each}
-      </select>
+    <!-- Font Family Selector -->
+    <DropdownSelect
+      label="Font Family"
+      options={googleFonts.map((font) => ({ label: font.name, value: font.name }))}
+      value={fontFamily}
+      onChange={(val) => (fontFamily = val)}
+    />
 
-      <!-- Font Weight Selector -->
-      <label class="label mt-4">
-        <span class="label-text">Font Weight</span>
-      </label>
-      <select bind:value={fontWeight} class="select select-bordered">
-        {#each availableFontWeights as weight}
-          <option value={weight}>{weight}</option>
-        {/each}
-      </select>
+    <!-- Font Weight Selector -->
+    <DropdownSelect
+      label="Font Weight"
+      options={availableFontWeights.map((weight) => ({ label: weight, value: weight }))}
+      value={fontWeight}
+      onChange={(val) => (fontWeight = val)}
+    />
 
-      <!-- Text Decoration Selector -->
-      <label class="label mt-4">
-        <span class="label-text">Text Decoration</span>
-      </label>
-      <select bind:value={textDecoration} class="select select-bordered">
-        <option value="none">None</option>
-        <option value="underline">Underline</option>
-        <option value="overline">Overline</option>
-        <option value="line-through">Line-through</option>
-      </select>
-    </div>
+    <!-- Text Decoration Selector -->
+    <DropdownSelect
+      label="Text Decoration"
+      options={[
+        { label: 'None', value: 'none' },
+        { label: 'Underline', value: 'underline' },
+        { label: 'Overline', value: 'overline' },
+        { label: 'Line-through', value: 'line-through' },
+      ]}
+      value={textDecoration}
+      onChange={(val) => (textDecoration = val)}
+    />
   </div>
 </div>

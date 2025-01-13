@@ -1,4 +1,6 @@
 <script>
+  import ToggleSwitch from './Modules/ToggleSwitch.svelte';
+  import RangeSetting from './Modules/RangeSetting.svelte';
   import { rootStore } from '../../stores/rootStore';
   import { updateElementStyle } from '../../utils/updateStyles.js';
   import { get } from 'svelte/store';
@@ -35,10 +37,6 @@
     'carousel'
   );
   $: updateElementStyle($selectedElement, 'borderRadius', `${borderRadius}%`, 'carousel');
-
-  const toggleFlowDirection = (checked) => {
-    flowDirection = checked ? 'vertical' : 'horizontal';
-  };
 </script>
 
 <div class="collapse collapse-arrow bg-base-200">
@@ -47,59 +45,45 @@
     Carousel Settings
   </label>
   <div class="collapse-content">
-    <!-- Flow Direction -->
-    <label class="swap" id="carousel-direction">
-      <input
-        type="checkbox"
-        checked={flowDirection === 'vertical'}
-        on:change={(e) => toggleFlowDirection(e.target.checked)}
-      />
-      <div class="swap-on">Vertical Flow</div>
-      <div class="swap-off">Horizontal Flow</div>
-    </label>
+    <!-- Flow Direction Toggle -->
+    <ToggleSwitch
+      label="Flow Direction"
+      checked={flowDirection === 'vertical'}
+      onChange={(checked) => (flowDirection = checked ? 'vertical' : 'horizontal')}
+    />
 
     <!-- Width Setting -->
-    <div class="form-control mt-4">
-      <label class="label">
-        <span class="label-text">Width: {width}%</span>
-      </label>
-      <input
-        type="range"
-        min="0"
-        max="100"
-        bind:value={width}
-        class="range range-primary"
-      />
-    </div>
+    <RangeSetting
+      label="Width"
+      min={0}
+      max={100}
+      value={width}
+      unit="%"
+      onChange={(val) => (width = val)}
+    />
 
     <!-- Height Setting -->
-    <div class="form-control mt-4">
-      <label class="label">
-        <span class="label-text">Height (px or 'auto')</span>
-      </label>
-      <input
-        type="text"
-        class="input input-bordered"
-        bind:value={height}
-        placeholder="e.g., auto, 200"
-      />
-    </div>
+    <RangeSetting
+      label="Height"
+      min={50}
+      max={500}
+      value={parseInt(height) || 50}
+      unit="px"
+      onChange={(val) => (height = `${val}px`)}
+    />
 
     <!-- Border Radius Setting -->
-    <div class="form-control mt-4">
-      <label class="label">
-        <span class="label-text">Border Radius: {borderRadius}%</span>
-      </label>
-      <input
-        type="range"
-        min="0"
-        max="50"
-        bind:value={borderRadius}
-        class="range range-primary"
-      />
-    </div>
+    <RangeSetting
+      label="Border Radius"
+      min={0}
+      max={50}
+      value={borderRadius}
+      unit="%"
+      onChange={(val) => (borderRadius = val)}
+    />
   </div>
 </div>
+
 
 <style>
   #carousel-direction {
