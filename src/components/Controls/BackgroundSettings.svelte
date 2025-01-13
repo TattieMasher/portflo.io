@@ -1,35 +1,40 @@
 <script>
-  import { selectedElement } from '../../stores/selectedElement.js';
-  import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
+  import { rootStore } from '../../stores/rootStore.js';
   import { updateElementStyle } from '../../utils/updateStyles.js';
   import RangeSetting from './Modules/RangeSetting.svelte';
+  import { get } from 'svelte/store';
+
+  // Destructure required stores from rootStore
+  const { selectedElement, selectedElementStyles } = rootStore;
 
   let isTransparent = false;
   let backgroundColor = '#ffffff';
   let borderRadius = 0; // number representing pixels
   let previousSelectedElement = null;
 
-  $: if ($selectedElement !== previousSelectedElement) {
-    previousSelectedElement = $selectedElement;
-    initializeLocalVariables();
-  }
-
-  function initializeLocalVariables() {
-    backgroundColor = $selectedElementStyles.backgroundColor || '#ffffff';
-    isTransparent = !backgroundColor || backgroundColor === 'transparent';
-    borderRadius = parseInt($selectedElementStyles.borderRadius) || 0;
-  }
-  
   $: {
+    const currentSelectedElement = get(selectedElement);
+    const currentSelectedElementStyles = get(selectedElementStyles);
+
+    if (currentSelectedElement !== previousSelectedElement) {
+      previousSelectedElement = currentSelectedElement;
+      initializeLocalVariables(currentSelectedElementStyles);
+    }
+
     const color = isTransparent ? 'transparent' : backgroundColor;
-    updateElementStyle($selectedElement, 'backgroundColor', color);
+    updateElementStyle(currentSelectedElement, 'backgroundColor', color);
 
     if (!isTransparent) {
-      updateElementStyle($selectedElement, 'borderRadius', `${borderRadius}px`);
+      updateElementStyle(currentSelectedElement, 'borderRadius', `${borderRadius}px`);
     } else {
-      // Reset border radius to 0px when background is transparent
-      updateElementStyle($selectedElement, 'borderRadius', '0px');
+      updateElementStyle(currentSelectedElement, 'borderRadius', '0px');
     }
+  }
+
+  function initializeLocalVariables(styles) {
+    backgroundColor = styles?.backgroundColor || '#ffffff';
+    isTransparent = !backgroundColor || backgroundColor === 'transparent';
+    borderRadius = parseInt(styles?.borderRadius) || 0;
   }
 </script>
 
@@ -68,7 +73,7 @@
           max={50}
           value={borderRadius}
           unit="px"
-          onChange={(val) => updateElementStyle($selectedElement, 'borderRadius', `${val}px`)}
+          onChange={(val) => updateElementStyle(get(selectedElement), 'borderRadius', `${val}px`)}
         />
       {/if}
     </div>

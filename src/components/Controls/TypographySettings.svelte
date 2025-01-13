@@ -1,8 +1,10 @@
 <script>
-  import { selectedElement } from '../../stores/selectedElement.js';
+  import { rootStore } from '../../stores/rootStore';
   import { updateElementStyle } from '../../utils/updateStyles.js';
-  import { elementStyles } from '../../stores/elementStyles.js';
   import { googleFonts } from '../../utils/googleFonts.js';
+  import { get } from 'svelte/store';
+
+  const { selectedElement, elementStyles } = rootStore;
 
   let fontFamily = 'Arial';
   let fontWeight = '400';
@@ -11,7 +13,7 @@
 
   let availableFontWeights = ['400']; // Default font weights
 
-  // Initialize local variables when selectedElement changes
+  // Initialize local variables when `selectedElement` changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
@@ -24,17 +26,16 @@
     textDecoration = styles.textDecoration || 'none';
   }
 
-  // Update available font weights when fontFamily changes
+  // Update available font weights when `fontFamily` changes
   $: {
     const selectedFont = googleFonts.find((font) => font.name === fontFamily);
     availableFontWeights = selectedFont ? selectedFont.weights : ['400'];
   }
 
-  $: {
-    updateElementStyle($selectedElement, 'fontFamily', fontFamily);
-    updateElementStyle($selectedElement, 'fontWeight', fontWeight);
-    updateElementStyle($selectedElement, 'textDecoration', textDecoration);
-  }
+  // Update styles reactively
+  $: updateElementStyle($selectedElement, 'fontFamily', fontFamily);
+  $: updateElementStyle($selectedElement, 'fontWeight', fontWeight);
+  $: updateElementStyle($selectedElement, 'textDecoration', textDecoration);
 </script>
 
 <div class="collapse collapse-arrow bg-base-200">

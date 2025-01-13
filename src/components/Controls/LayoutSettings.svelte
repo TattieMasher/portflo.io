@@ -1,6 +1,6 @@
 <script>
-  import { selectedElement } from '../../stores/selectedElement.js';
-  import { projects } from '../../stores/projects.js';
+  import { rootStore } from '../../stores/rootStore';
+  import { get } from 'svelte/store';
   import { updateContainerProperty } from '../../utils/updateContainerProperty.js';
 
   import ArticleSettings from './LayoutSettings/ArticleSettings.svelte';
@@ -9,9 +9,12 @@
   import TimelineSettings from './LayoutSettings/TimelineSettings.svelte';
   import MasonrySettings from './LayoutSettings/MasonrySettings.svelte';
 
+  const { selectedElement, projects } = rootStore;
+
   let containerLayout = null;
   let previousSelectedElement = null;
 
+  // Recalculate container layout when selected element changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLayoutType();
@@ -20,13 +23,16 @@
   function initializeLayoutType() {
     const [projectIndex, containerIndex] = getIndicesFromElementId($selectedElement);
     if (projectIndex !== null && containerIndex !== null) {
-      const container = $projects[projectIndex]?.containers[containerIndex];
+      const currentProjects = get(projects);
+      const container = currentProjects[projectIndex]?.containers?.[containerIndex];
       containerLayout = container?.layout || null;
+    } else {
+      containerLayout = null;
     }
   }
 
   function getIndicesFromElementId(elementId) {
-    if (elementId && elementId.startsWith('project-')) {
+    if (elementId?.startsWith('project-')) {
       const parts = elementId.split('-');
       const projectIndex = parseInt(parts[1]);
       if (parts[2] === 'container') {

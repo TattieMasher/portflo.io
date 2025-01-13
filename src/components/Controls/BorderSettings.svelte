@@ -1,8 +1,9 @@
 <script>
-  import { selectedElement } from '../../stores/selectedElement.js';
-  import { updateElementStyle } from '../../utils/updateStyles.js';
-  import { elementStyles } from '../../stores/elementStyles.js';
+  import { rootStore } from '../../stores/rootStore.js';
+  import { get } from 'svelte/store';
   import RangeSetting from './Modules/RangeSetting.svelte';
+
+  const { selectedElement, elementStyles } = rootStore;
 
   let borderWidth = 0;
   let borderStyle = 'solid';
@@ -11,22 +12,33 @@
 
   const borderStyles = ['none', 'solid', 'dashed', 'dotted', 'double', 'groove', 'ridge'];
 
-  $: if ($selectedElement !== previousSelectedElement) {
-    previousSelectedElement = $selectedElement;
+  // Reactive variable to update when selectedElement changes
+  $: if (get(selectedElement) !== previousSelectedElement) {
+    previousSelectedElement = get(selectedElement);
     initializeLocalVariables();
   }
 
   function initializeLocalVariables() {
-    const styles = $elementStyles[$selectedElement] || {};
+    const styles = get(elementStyles)[get(selectedElement)] || {};
     borderWidth = parseInt(styles.borderWidth) || 0;
     borderStyle = styles.borderStyle || 'solid';
     borderColor = styles.borderColor || '#000000';
   }
 
+  // Reactive updates to store
   $: {
-    updateElementStyle($selectedElement, 'borderWidth', `${borderWidth}px`);
-    updateElementStyle($selectedElement, 'borderStyle', borderStyle);
-    updateElementStyle($selectedElement, 'borderColor', borderColor);
+    const currentElement = get(selectedElement);
+    if (currentElement) {
+      rootStore.elementStyles.update((styles) => {
+        styles[currentElement] = {
+          ...styles[currentElement],
+          borderWidth: `${borderWidth}px`,
+          borderStyle: borderStyle,
+          borderColor: borderColor,
+        };
+        return styles;
+      });
+    }
   }
 </script>
 
@@ -44,7 +56,7 @@
         max={20}
         value={borderWidth}
         unit="px"
-        onChange={(val) => updateElementStyle($selectedElement, 'borderWidth', `${val}px`)}
+        onChange={(val) => (borderWidth = val)}
       />
 
       <!-- Border Style Selector -->

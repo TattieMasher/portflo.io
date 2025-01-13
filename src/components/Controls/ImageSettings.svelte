@@ -1,13 +1,15 @@
 <script>
-  import { selectedElement } from '../../stores/selectedElement.js';
-  import { elementStyles } from '../../stores/elementStyles.js';
+  import { rootStore } from '../../stores/rootStore';
   import { updateElementStyle } from '../../utils/updateStyles.js';
+
+  const { selectedElement, elementStyles } = rootStore;
 
   let imageWidth = 100; // Percentage value
   let imageHeight = 'auto';
   let borderRadius = 0; // Percentage value
   let previousSelectedElement = null;
 
+  // Initialize local variables when the selected element changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
     initializeLocalVariables();
@@ -15,33 +17,29 @@
 
   function initializeLocalVariables() {
     const styles = $elementStyles[$selectedElement]?.image || {};
-    if (styles.width && styles.width.endsWith('%')) {
-      imageWidth = parseInt(styles.width);
-    } else {
-      imageWidth = 100;
-    }
-
+    imageWidth = styles.width?.endsWith('%') ? parseInt(styles.width) : 100;
     imageHeight = styles.height || 'auto';
     borderRadius = parseInt(styles.borderRadius) || 0;
   }
 
-  $: {
-    updateElementStyle($selectedElement, 'width', `${imageWidth}%`, 'image');
+  // Reactive updates to element styles
+  $: updateElementStyle($selectedElement, 'width', `${imageWidth}%`, 'image');
+  $: updateElementStyle(
+    $selectedElement,
+    'height',
+    imageHeight === 'auto' ? 'auto' : `${imageHeight}px`,
+    'image'
+  );
+  $: updateElementStyle($selectedElement, 'borderRadius', `${borderRadius}%`, 'image');
+
+  // Update height explicitly
+  const updateHeight = () => {
     updateElementStyle(
       $selectedElement,
       'height',
       imageHeight === 'auto' ? 'auto' : `${imageHeight}px`,
       'image'
     );
-    updateElementStyle($selectedElement, 'borderRadius', `${borderRadius}%`, 'image');
-  }
-
-  const updateHeight = () => {
-    if (imageHeight === 'auto') {
-      updateElementStyle($selectedElement, 'height', 'auto', 'image');
-    } else {
-      updateElementStyle($selectedElement, 'height', `${imageHeight}px`, 'image');
-    }
   };
 </script>
 
@@ -51,6 +49,7 @@
     Image Settings
   </label>
   <div class="collapse-content">
+    <!-- Width Setting -->
     <div class="form-control">
       <label class="label">
         <span class="label-text">Width: {imageWidth}%</span>
@@ -63,6 +62,8 @@
         class="range range-primary"
       />
     </div>
+
+    <!-- Height Setting -->
     <div class="form-control mt-4">
       <label class="label">
         <span class="label-text">Height (px)</span>
@@ -75,6 +76,8 @@
         placeholder="e.g., auto, 200"
       />
     </div>
+
+    <!-- Border Radius Setting -->
     <div class="form-control mt-4">
       <label class="label">
         <span class="label-text">Border Radius: {borderRadius}%</span>
