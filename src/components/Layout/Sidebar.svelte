@@ -1,6 +1,9 @@
 <script>
-  import { projects } from '../../stores/projects.js';
-  import { selectedElement } from '../../stores/selectedElement.js';
+  import { rootStore } from '../../stores/rootStore';
+  import { get } from 'svelte/store';
+
+  // Destructure only the needed parts from rootStore
+  const { projects, selectedElement } = rootStore;
 
   export let addContainer;
   export let addComponent;
@@ -14,7 +17,7 @@
 
   const selectPortfolio = () => {
     selectedElement.set('portfolio');
-    const portfolioElement = document.getElementById('portfolio'); // TODO, make this work
+    const portfolioElement = document.getElementById('portfolio');
     if (portfolioElement) {
       portfolioElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
