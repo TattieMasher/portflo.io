@@ -1,4 +1,5 @@
 <script>
+  import { updateComponent } from '../../utils/updateComponent.js';
   import { projects } from '../../stores/projects.js';
   import { mode } from '../../stores/mode.js';
   import { selectedElement } from '../../stores/selectedElement.js';
@@ -21,34 +22,10 @@
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        updateComponent({ content: e.target.result });
+        updateComponent(projectIndex, containerIndex, componentIndex, { content: e.target.result });
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const updateComponent = (changes) => {
-    projects.update((proj) => {
-      const updatedProjects = proj.map((projItem, idx) => {
-        if (idx === projectIndex) {
-          const updatedContainers = projItem.containers.map((containerItem, cIdx) => {
-            if (cIdx === containerIndex) {
-              const updatedComponents = containerItem.components.map((comp, compIdx) => {
-                if (compIdx === componentIndex) {
-                  return { ...comp, ...changes };
-                }
-                return comp;
-              });
-              return { ...containerItem, components: updatedComponents };
-            }
-            return containerItem;
-          });
-          return { ...projItem, containers: updatedContainers };
-        }
-        return projItem;
-      });
-      return updatedProjects;
-    });
   };
 
   // Get styles for container and image

@@ -63,6 +63,7 @@
 </script>
 
 <div class="form-control">
+  CURRENTLY DON'T DO ANYTHING!
   <!-- Transition Speed -->
   <label class="label">
     <span class="label-text">Transition Speed (ms)</span>

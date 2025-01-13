@@ -45,6 +45,7 @@
     Carousel Settings
   </label>
   <div class="collapse-content">
+    CURRENTLY DON'T DO ANYTHING!
     <!-- Flow Direction Toggle -->
     <ToggleSwitch
       label="Flow Direction"
