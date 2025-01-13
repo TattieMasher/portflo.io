@@ -1,79 +1,83 @@
 <script>
   import Settings from '../Controls/Settings.svelte';
-  import { selectedElement } from '../../stores/selectedElement.js';
-  import { projects } from '../../stores/projects.js';
-  import { copiedStyles } from '../../stores/copiedStyles.js';
-  import { elementStyles } from '../../stores/elementStyles.js';
-  import { addNotification } from '../../stores/notifications.js';
+  import { rootStore } from '../../stores/rootStore';
   import { get } from 'svelte/store';
+
+  const { projects, selectedElement, selectedElementStyles, copiedStyles, elementStyles, notifications } = rootStore;
 
   let selectedComponentType = null;
 
-  $: {
-    const currentSelectedElement = $selectedElement;
-    const currentProjects = $projects;
-
-    if (currentSelectedElement && currentSelectedElement.startsWith('project-')) {
-      const parts = currentSelectedElement.split('-');
+  function determineSelectedComponentType(selectedElement, projects) {
+    if (selectedElement?.startsWith('project-')) {
+      const parts = selectedElement.split('-');
       const projectIndex = parseInt(parts[1]);
-      const project = currentProjects[projectIndex];
+      const project = projects[projectIndex];
 
       if (parts[2] === 'container' && parts[4] === 'component') {
         const containerIndex = parseInt(parts[3]);
         const componentIndex = parseInt(parts[5]);
         const component = project?.containers?.[containerIndex]?.components?.[componentIndex];
-        selectedComponentType = component?.type || null;
+        return component?.type || null;
       } else if (parts[2] === 'container') {
-        selectedComponentType = 'container'; // Set to 'container' when a container is selected
+        return 'container';
       } else {
-        selectedComponentType = 'project';
+        return 'project';
       }
-    } else if (currentSelectedElement === 'user') {
-      selectedComponentType = 'user';
-    } else {
-      selectedComponentType = null;
+    } else if (selectedElement === 'user') {
+      return 'user';
     }
+    return null;
   }
+
+  $: selectedComponentType = determineSelectedComponentType($selectedElement, $projects);
+
+  const addNotification = (message, type) => {
+    notifications.update((n) => [...n, { message, type, id: Date.now() }]);
+  };
 
   const copyStyles = () => {
     const currentSelectedElement = get(selectedElement);
     const currentElementStyles = get(elementStyles);
-    if (currentSelectedElement) {
-      const stylesToCopy = currentElementStyles[currentSelectedElement];
-      if (stylesToCopy) {
-        copiedStyles.set({
-          styles: stylesToCopy,
-          type: selectedComponentType,
-        });
-        addNotification('Styles copied successfully.', 'success');
-      } else {
-        addNotification('No styles to copy.', 'error');
-      }
-    } else {
+
+    if (!currentSelectedElement) {
       addNotification('No element selected.', 'error');
+      return;
+    }
+
+    const stylesToCopy = currentElementStyles[currentSelectedElement];
+    if (stylesToCopy) {
+      copiedStyles.set({
+        styles: stylesToCopy,
+        type: selectedComponentType,
+      });
+      addNotification('Styles copied successfully.', 'success');
+    } else {
+      addNotification('No styles to copy.', 'error');
     }
   };
 
   const pasteStyles = () => {
     const currentSelectedElement = get(selectedElement);
     const currentCopiedStyles = get(copiedStyles);
-    if (currentSelectedElement) {
-      const { styles, type } = currentCopiedStyles || {};
-      if (styles && type) {
-        if (type === selectedComponentType) {
-          elementStyles.update((stylesObj) => {
-            stylesObj[currentSelectedElement] = { ...styles };
-            return stylesObj;
-          });
-          addNotification('Styles pasted successfully.', 'success');
-        } else {
-          addNotification('Cannot paste styles: incompatible component types.', 'error');
-        }
+
+    if (!currentSelectedElement) {
+      addNotification('No element selected.', 'error');
+      return;
+    }
+
+    const { styles, type } = currentCopiedStyles || {};
+    if (styles && type) {
+      if (type === selectedComponentType) {
+        elementStyles.update((stylesObj) => {
+          stylesObj[currentSelectedElement] = { ...styles };
+          return stylesObj;
+        });
+        addNotification('Styles pasted successfully.', 'success');
       } else {
-        addNotification('No styles copied.', 'error');
+        addNotification('Cannot paste styles: incompatible component types.', 'error');
       }
     } else {
-      addNotification('No element selected.', 'error');
+      addNotification('No styles copied.', 'error');
     }
   };
 
@@ -92,48 +96,20 @@
         const containerIndex = parseInt(parts[3]);
         const componentIndex = parseInt(parts[5]);
         projects.update((proj) => {
-          const updatedProjects = proj.map((project, idx) => {
-            if (idx === projectIndex) {
-              const updatedContainers = project.containers.map((container, cIdx) => {
-                if (cIdx === containerIndex) {
-                  const updatedComponents = container.components.filter((_, compIdx) => compIdx !== componentIndex);
-                  return {
-                    ...container,
-                    components: updatedComponents,
-                  };
-                }
-                return container;
-              });
-              return {
-                ...project,
-                containers: updatedContainers,
-              };
-            }
-            return project;
-          });
-          return updatedProjects;
+          proj[projectIndex]?.containers[containerIndex]?.components.splice(componentIndex, 1);
+          return proj;
         });
         addNotification('Component deleted.', 'success');
       } else if (parts[2] === 'container') {
-        const containerIndex = parseInt(parts[3]);
         projects.update((proj) => {
-          const updatedProjects = proj.map((project, idx) => {
-            if (idx === projectIndex) {
-              const updatedContainers = project.containers.filter((_, cIdx) => cIdx !== containerIndex);
-              return {
-                ...project,
-                containers: updatedContainers,
-              };
-            }
-            return project;
-          });
-          return updatedProjects;
+          proj[projectIndex]?.containers.splice(parseInt(parts[3]), 1);
+          return proj;
         });
         addNotification('Container deleted.', 'success');
       } else {
         projects.update((proj) => {
-          const updatedProjects = proj.filter((_, idx) => idx !== projectIndex);
-          return updatedProjects;
+          proj.splice(projectIndex, 1);
+          return proj;
         });
         addNotification('Project deleted.', 'success');
       }
@@ -156,15 +132,13 @@
         </span>
       </li>
       {#if $selectedElement}
-        <!-- Copy, Paste, and Delete Buttons -->
         <div class="flex space-x-2 mb-4">
           <button class="btn btn-sm btn-outline btn-info w-1/2" on:click={copyStyles}>Copy Style</button>
           <button class="btn btn-sm btn-outline btn-accent w-1/2" on:click={pasteStyles}>Paste Style</button>
         </div>
 
-        <!-- Render dynamic settings -->
         <Settings {selectedComponentType} />
-        
+
         {#if $selectedElement !== 'user'}
           <button class="btn btn-sm btn-outline btn-error w-full" on:click={deleteSelectedElement}>Delete Item</button>
         {/if}
