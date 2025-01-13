@@ -32,13 +32,13 @@
 <div class="settings-container">
   {#if modulesToRender.length > 0}
     {#each modulesToRender as Module}
-      <!-- Pass dynamic props based on settingsConfig -->
-      <Module {...(settingsConfig[Module.name] || {})} />
+      <svelte:component this={Module} {...(settingsConfig[Module.name] || {})} key={selectedComponentType} />
     {/each}
   {:else}
     <p>No settings available for this element.</p>
   {/if}
 </div>
+
 
 <style>
   .settings-container {
