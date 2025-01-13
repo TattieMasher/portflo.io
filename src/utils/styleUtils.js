@@ -1,4 +1,3 @@
-// utils/styleUtils.js
 export const cssPropertyMap = {
   backgroundColor: 'background-color',
   fontSize: 'font-size',
