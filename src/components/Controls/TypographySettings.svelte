@@ -1,5 +1,6 @@
 <script>
   import DropdownSelect from './Modules/DropdownSelect.svelte';
+  import FontDropdown from './Modules/FontDropdown.svelte';
   import { rootStore } from '../../stores/rootStore';
   import { updateElementStyle } from '../../utils/updateStyles.js';
   import { googleFonts } from '../../utils/googleFonts.js';
@@ -39,17 +40,15 @@
   $: updateElementStyle($selectedElement, 'textDecoration', textDecoration);
 </script>
 
-<div class="collapse collapse-arrow bg-base-200">
+<div class="collapse collapse-arrow bg-base-200 overflow-visible">
   <input type="checkbox" id="typography-settings" />
   <label for="typography-settings" class="collapse-title text-xl font-medium">
     Typography Settings
   </label>
   <div class="collapse-content">
     <!-- Font Family Selector -->
-    <DropdownSelect
-      label="Font Family"
-      options={googleFonts.map((font) => ({ label: font.name, value: font.name }))}
-      value={fontFamily}
+    <FontDropdown
+      selectedFont={fontFamily}
       onChange={(val) => (fontFamily = val)}
     />
 
