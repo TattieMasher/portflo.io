@@ -15,6 +15,9 @@
 
   let availableFontWeights = ['400']; // Default font weights
 
+  // Sort the fonts alphabetically by name
+  const sortedFonts = [...googleFonts].sort((a, b) => a.name.localeCompare(b.name));
+
   // Initialize local variables when `selectedElement` changes
   $: if ($selectedElement !== previousSelectedElement) {
     previousSelectedElement = $selectedElement;
@@ -30,7 +33,7 @@
 
   // Update available font weights when `fontFamily` changes
   $: {
-    const selectedFont = googleFonts.find((font) => font.name === fontFamily);
+    const selectedFont = sortedFonts.find((font) => font.name === fontFamily);
     availableFontWeights = selectedFont ? selectedFont.weights : ['400'];
   }
 
