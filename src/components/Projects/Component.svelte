@@ -99,11 +99,3 @@
     />
   {/if}
 </div>
-
-<style>
-  .selected {
-    outline: 2px solid blue;
-    outline-offset: 4px;
-    outline-style: dashed;
-  }
-</style>

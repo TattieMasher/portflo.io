@@ -117,9 +117,6 @@
 </div>
 
 <style>
-  .selected {
-    outline: 2px solid blue !important;
-  }
   video,
   iframe {
     width: 100%;

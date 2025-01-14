@@ -100,9 +100,3 @@
     <MasonryContainer {container} {projectIndex} {containerIndex} />
   {/if}
 </div>
-
-<style>
-.selected {
-    border: 2px solid blue !important; /* Maybe use outline instead? */
-  }
-</style>
