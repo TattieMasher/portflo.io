@@ -102,6 +102,8 @@
 
 <style>
   .selected {
-    border: 2px solid blue !important;
+    outline: 2px solid blue;
+    outline-offset: 4px;
+    outline-style: dashed;
   }
 </style>
