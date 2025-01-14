@@ -69,7 +69,7 @@
         on:change={handleCarouselImageUpload}
       />
       {#if component.images}
-        <div class="carousel carousel-center bg-neutral rounded-box max-w-md space-x-4 p-4 mt-4">
+        <div class="carousel carousel-center rounded-box max-w-md space-x-4 p-4 mt-4">
           {#each component.images as image}
             <div class="carousel-item">
               <img src={image} class="rounded-box" />
@@ -81,7 +81,7 @@
   {:else}
     <!-- Display fields for component -->
     {#if component.images}
-      <div class="carousel carousel-center bg-neutral rounded-box max-w-md space-x-4 p-4 mt-4">
+      <div class="carousel carousel-center rounded-box max-w-md space-x-4 p-4 mt-4">
         {#each component.images as image}
           <div class="carousel-item">
             <img src={image} class="rounded-box" />
