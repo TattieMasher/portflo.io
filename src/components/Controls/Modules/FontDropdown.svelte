@@ -10,7 +10,7 @@
   };
 </script>
 
-<div class="dropdown dropdown-end relative" id="font-dropdown">
+<div class="dropdown" id="font-dropdown">
   <div tabindex="0" class="btn m-1">{selectedFont}</div>
   <ul
     tabindex="0"
@@ -28,3 +28,9 @@
     {/each}
   </ul>
 </div>
+
+<style>
+  .dropdown {
+    z-index: 100000;
+  }
+</style>

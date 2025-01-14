@@ -124,7 +124,7 @@
 </script>
 
 {#if selectedComponentType}
-  <aside class="menu p-4 w-80 bg-gray-800 text-white h-full overflow-y-auto" id="right-sidebar">
+  <aside class="menu p-4 w-80 bg-gray-800 text-white h-full" id="right-sidebar">
     <ul class="space-y-4">
       <li class="menu-title">
         <span class="text-xl font-semibold" style="text-transform: capitalize">
@@ -153,6 +153,7 @@
   }
 
   #right-sidebar {
-    overflow-x: visible;
-  }
+  height: calc(100vh - 64px);
+  overflow-x: visible;
+}
 </style>
