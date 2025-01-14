@@ -8,7 +8,7 @@
   import { elementStyles } from '../../stores/elementStyles.js';
   import { mode } from '../../stores/mode.js';
   import { getStyleString } from '../../utils/styleUtils.js';
-  import { updateComponent } from '../../utils/updateComponent.js'; // Import centralized function
+  import { updateComponent } from '../../utils/updateComponent.js';
 
   export let component;
   export let componentIndex;
@@ -29,7 +29,7 @@
 
 <div
   id={`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
-  class="mt-4"
+  class="component-wrapper"
   on:click={(e) => {
     if ($mode === 'edit') {
       e.stopPropagation();
@@ -41,61 +41,78 @@
     $selectedElement ===
       `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
   }
-  style={getStyleString(
-    $selectedElement ===
-      `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
-      ? $selectedElementStyles
-      : $elementStyles[
-          `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
-        ] || {}
-  )}
 >
-  {#if $mode === 'edit'}
-    <!-- Component Type Selector -->
-    <div class="form-control w-full max-w-96">
-      <label class="label">
-        <span class="label-text">Component Type</span>
-      </label>
-      <select
-        class="select select-bordered"
-        bind:value={component.type}
-        on:change={handleTypeChange}
-      >
-        {#each componentTypes as type}
-          <option value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
-        {/each}
-      </select>
-    </div>
-  {/if}
+  <div class="component-content-wrapper">
+    {#if $mode === 'edit'}
+      <!-- Component Type Selector -->
+      <div class="form-control w-full max-w-96">
+        <label class="label">
+          <span class="label-text">Component Type</span>
+        </label>
+        <select
+          class="select select-bordered"
+          bind:value={component.type}
+          on:change={handleTypeChange}
+        >
+          {#each componentTypes as type}
+            <option value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
+          {/each}
+        </select>
+      </div>
+    {/if}
 
-  <!-- Render the appropriate component based on type -->
-  {#if component.type === 'text'}
-    <TextComponent
-      {component}
-      {componentIndex}
-      {projectIndex}
-      {containerIndex}
-    />
-  {:else if component.type === 'image'}
-    <ImageComponent
-      {component}
-      {componentIndex}
-      {projectIndex}
-      {containerIndex}
-    />
-  {:else if component.type === 'carousel'}
-    <CarouselComponent
-      {component}
-      {componentIndex}
-      {projectIndex}
-      {containerIndex}
-    />
-  {:else if component.type === 'video'}
-    <VideoComponent
-      {component}
-      {componentIndex}
-      {projectIndex}
-      {containerIndex}
-    />
-  {/if}
+    <!-- Render the appropriate component based on type -->
+    <div class="component-body">
+      {#if component.type === 'text'}
+        <TextComponent
+          {component}
+          {componentIndex}
+          {projectIndex}
+          {containerIndex}
+        />
+      {:else if component.type === 'image'}
+        <ImageComponent
+          {component}
+          {componentIndex}
+          {projectIndex}
+          {containerIndex}
+        />
+      {:else if component.type === 'carousel'}
+        <CarouselComponent
+          {component}
+          {componentIndex}
+          {projectIndex}
+          {containerIndex}
+        />
+      {:else if component.type === 'video'}
+        <VideoComponent
+          {component}
+          {componentIndex}
+          {projectIndex}
+          {containerIndex}
+        />
+      {/if}
+    </div>
+  </div>
 </div>
+
+<style>
+  .component-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: 4px;
+    transition: outline 0.2s ease;
+  }
+
+  .component-wrapper.selected {
+    outline: 2px dashed blue;
+    outline-offset: 4px;
+  }
+
+  .component-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+</style>
