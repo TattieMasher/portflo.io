@@ -19,20 +19,20 @@
     </label>
   
     <!-- Custom Dropdown -->
-    <div class="dropdown">
+    <div class="dropdown select-bordered">
+      <!-- Trigger without animation -->
       <div class="dropdown-trigger" on:click={() => (isOpen = !isOpen)}>
-        <div class="btn btn-bordered flex items-center gap-2">
+        <div class="btn btn-bordered flex items-center no-animation">
           {#if value}
-            {#if options.find((option) => option.value === value)?.icon}
-              <Icon icon={options.find((option) => option.value === value).icon} class="text-xl" />
-            {/if}
-            {options.find((option) => option.value === value)?.label}
+            <span>{options.find((option) => option.value === value)?.label}</span>
           {:else}
             Select an option
           {/if}
           <Icon icon="radix-icons:chevron-down" class="ml-auto text-xl" />
         </div>
       </div>
+  
+      <!-- Dropdown Menu with Icons -->
       {#if isOpen}
         <div class="dropdown-menu bg-base-100 rounded-box shadow-md mt-2">
           {#each options as option}
@@ -68,6 +68,27 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+  
+    .btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+  
+    .btn-bordered {
+      border: 1px solid var(--color-gray-300);
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+  
+    /* Remove shrinking animation on click */
+    .btn.no-animation:focus,
+    .btn.no-animation:active {
+      transform: none !important;
+      box-shadow: none !important;
     }
   </style>
   

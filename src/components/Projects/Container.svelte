@@ -46,7 +46,7 @@
 
 <div
   id={`project-${projectIndex}-container-${containerIndex}`}
-  class="mt-4"
+  class="mt-4 container-header"
   on:click={(e) => {
     if ($mode === 'edit') {
       e.stopPropagation();
@@ -82,3 +82,10 @@
     <MasonryContainer {container} {projectIndex} {containerIndex} />
   {/if}
 </div>
+
+
+<style>
+  .container-header {
+    margin-bottom: 4px;
+  }
+</style>

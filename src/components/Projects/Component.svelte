@@ -79,12 +79,13 @@
 
   .component-wrapper.selected {
     outline: 2px dashed blue;
-    outline-offset: 4px;
+    outline-offset: -6px;
   }
 
   .component-content-wrapper {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    margin-top: 1rem;
   }
 </style>
