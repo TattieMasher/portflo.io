@@ -23,7 +23,7 @@
   const componentTypes = [
     { label: 'Text', value: 'text', icon: 'radix-icons:font-family' },
     { label: 'Image', value: 'image', icon: 'radix-icons:image' },
-    { label: 'Carousel', value: 'carousel', icon: 'radix-icons:view-carousel' },
+    { label: 'Carousel', value: 'carousel', icon: 'radix-icons:slider' },
     { label: 'Video', value: 'video', icon: 'radix-icons:video' },
   ];
 

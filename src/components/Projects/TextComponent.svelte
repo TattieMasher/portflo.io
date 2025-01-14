@@ -15,7 +15,7 @@
     selectedElement.set(`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
   };
 
-  const handleTitleChange = (event) => {
+  const handleTitleChange = (event) => { 
     updateComponent({ title: event.target.value });
   };
 

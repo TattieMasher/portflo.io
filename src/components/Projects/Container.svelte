@@ -23,10 +23,10 @@
 
   const layoutOptions = [
     { label: 'Article', value: 'article', icon: 'radix-icons:align-top' },
-    { label: 'Grid', value: 'grid', icon: 'radix-icons:dashboard' },
-    { label: 'Carousel', value: 'carousel', icon: 'radix-icons:carousel-horizontal' },
+    { label: 'Grid', value: 'grid', icon: 'radix-icons:grid' },
+    { label: 'Carousel', value: 'carousel', icon: 'radix-icons:slider' },
     { label: 'Timeline', value: 'timeline', icon: 'radix-icons:activity-log' },
-    { label: 'Masonry', value: 'masonry', icon: 'radix-icons:grid' },
+    { label: 'Masonry', value: 'masonry', icon: 'radix-icons:dashboard' },
   ];
 
   const updateContainerLayout = (layout) => {
