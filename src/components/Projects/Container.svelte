@@ -1,4 +1,5 @@
 <script>
+  import DropdownSelect from '../Controls/Modules/DropdownSelect.svelte';
   import { selectedElement } from '../../stores/selectedElement.js';
   import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
   import { elementStyles } from '../../stores/elementStyles.js';
@@ -18,35 +19,28 @@
 
   const selectElement = () => {
     selectedElement.set(`project-${projectIndex}-container-${containerIndex}`);
-    console.log('Selected Element:', `project-${projectIndex}-container-${containerIndex}`);
   };
 
-  // Available layout options for containers
-  const layoutOptions = ['article', 'grid', 'carousel', 'timeline', 'masonry'];
+  const layoutOptions = [
+    { label: 'Article', value: 'article', icon: 'radix-icons:align-top' },
+    { label: 'Grid', value: 'grid', icon: 'radix-icons:dashboard' },
+    { label: 'Carousel', value: 'carousel', icon: 'radix-icons:carousel-horizontal' },
+    { label: 'Timeline', value: 'timeline', icon: 'radix-icons:activity-log' },
+    { label: 'Masonry', value: 'masonry', icon: 'radix-icons:grid' },
+  ];
 
-  const updateContainerLayout = (event) => {
-    const newLayout = event.target.value;
-    projects.update((proj) => {
-      const updatedProjects = proj.map((project, idx) => {
+  const updateContainerLayout = (layout) => {
+    projects.update((proj) =>
+      proj.map((project, idx) => {
         if (idx === projectIndex) {
-          const updatedContainers = project.containers.map((containerItem, cIdx) => {
-            if (cIdx === containerIndex) {
-              return {
-                ...containerItem,
-                layout: newLayout,
-              };
-            }
-            return containerItem;
-          });
-          return {
-            ...project,
-            containers: updatedContainers,
-          };
+          const updatedContainers = project.containers.map((c, cIdx) =>
+            cIdx === containerIndex ? { ...c, layout } : c
+          );
+          return { ...project, containers: updatedContainers };
         }
         return project;
-      });
-      return updatedProjects;
-    });
+      })
+    );
   };
 </script>
 
@@ -59,10 +53,7 @@
       selectElement();
     }
   }}
-  class:selected={
-    $mode === 'edit' &&
-    $selectedElement === `project-${projectIndex}-container-${containerIndex}`
-  }
+  class:selected={$mode === 'edit' && $selectedElement === `project-${projectIndex}-container-${containerIndex}`}
   style={getStyleString(
     $selectedElement === `project-${projectIndex}-container-${containerIndex}`
       ? $selectedElementStyles
@@ -70,21 +61,12 @@
   )}
 >
   {#if $mode === 'edit'}
-    <!-- Layout Selector -->
-    <div class="form-control w-full max-w-xs">
-      <label class="label">
-        <span class="label-text">Container Layout</span>
-      </label>
-      <select
-        class="select select-bordered"
-        bind:value={container.layout}
-        on:change={updateContainerLayout}
-      >
-        {#each layoutOptions as option}
-          <option value={option}>{option.charAt(0).toUpperCase() + option.slice(1)}</option>
-        {/each}
-      </select>
-    </div>
+    <DropdownSelect
+      label="Container Layout"
+      options={layoutOptions}
+      value={container.layout}
+      onChange={updateContainerLayout}
+    />
   {/if}
 
   <!-- Render components based on container layout -->

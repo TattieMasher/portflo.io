@@ -1,4 +1,5 @@
 <script>
+  import DropdownSelect from '../Controls/Modules/DropdownSelect.svelte';
   import TextComponent from './TextComponent.svelte';
   import ImageComponent from './ImageComponent.svelte';
   import CarouselComponent from './CarouselComponent.svelte';
@@ -17,14 +18,18 @@
 
   const selectElement = () => {
     selectedElement.set(`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
-    console.log('Selected Element:', `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
   };
 
-  const handleTypeChange = (event) => {
-    updateComponent(projectIndex, containerIndex, componentIndex, { type: event.target.value });
-  };
+  const componentTypes = [
+    { label: 'Text', value: 'text', icon: 'radix-icons:font-family' },
+    { label: 'Image', value: 'image', icon: 'radix-icons:image' },
+    { label: 'Carousel', value: 'carousel', icon: 'radix-icons:view-carousel' },
+    { label: 'Video', value: 'video', icon: 'radix-icons:video' },
+  ];
 
-  const componentTypes = ['text', 'image', 'carousel', 'video'];
+  const updateComponentType = (type) => {
+    updateComponent(projectIndex, containerIndex, componentIndex, { type });
+  };
 </script>
 
 <div
@@ -36,61 +41,28 @@
       selectElement();
     }
   }}
-  class:selected={
-    $mode === 'edit' &&
-    $selectedElement ===
-      `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`
-  }
+  class:selected={$mode === 'edit' && $selectedElement === `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`}
 >
   <div class="component-content-wrapper">
     {#if $mode === 'edit'}
-      <!-- Component Type Selector -->
-      <div class="form-control w-full max-w-96">
-        <label class="label">
-          <span class="label-text">Component Type</span>
-        </label>
-        <select
-          class="select select-bordered"
-          bind:value={component.type}
-          on:change={handleTypeChange}
-        >
-          {#each componentTypes as type}
-            <option value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
-          {/each}
-        </select>
-      </div>
+      <DropdownSelect
+        label="Component Type"
+        options={componentTypes}
+        value={component.type}
+        onChange={updateComponentType}
+      />
     {/if}
 
     <!-- Render the appropriate component based on type -->
     <div class="component-body">
       {#if component.type === 'text'}
-        <TextComponent
-          {component}
-          {componentIndex}
-          {projectIndex}
-          {containerIndex}
-        />
+        <TextComponent {component} {componentIndex} {projectIndex} {containerIndex} />
       {:else if component.type === 'image'}
-        <ImageComponent
-          {component}
-          {componentIndex}
-          {projectIndex}
-          {containerIndex}
-        />
+        <ImageComponent {component} {componentIndex} {projectIndex} {containerIndex} />
       {:else if component.type === 'carousel'}
-        <CarouselComponent
-          {component}
-          {componentIndex}
-          {projectIndex}
-          {containerIndex}
-        />
+        <CarouselComponent {component} {componentIndex} {projectIndex} {containerIndex} />
       {:else if component.type === 'video'}
-        <VideoComponent
-          {component}
-          {componentIndex}
-          {projectIndex}
-          {containerIndex}
-        />
+        <VideoComponent {component} {componentIndex} {projectIndex} {containerIndex} />
       {/if}
     </div>
   </div>
