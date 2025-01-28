@@ -1,14 +1,12 @@
 <script>
   import DropdownSelect from '../Controls/Modules/DropdownSelect.svelte';
+  import ToggleSwitch from '../Controls/Modules/ToggleSwitch.svelte';
   import TextComponent from './TextComponent.svelte';
   import ImageComponent from './ImageComponent.svelte';
   import CarouselComponent from './CarouselComponent.svelte';
   import VideoComponent from './VideoComponent.svelte';
   import { selectedElement } from '../../stores/selectedElement.js';
-  import { selectedElementStyles } from '../../stores/selectedElementStyles.js';
-  import { elementStyles } from '../../stores/elementStyles.js';
   import { mode } from '../../stores/mode.js';
-  import { getStyleString } from '../../utils/styleUtils.js';
   import { updateComponent } from '../../utils/updateComponent.js';
 
   export let component;
@@ -29,6 +27,18 @@
 
   const updateComponentType = (type) => {
     updateComponent(projectIndex, containerIndex, componentIndex, { type });
+  };
+
+  const toggleTitleVisibility = () => {
+    updateComponent(projectIndex, containerIndex, componentIndex, {
+      showTitle: !component.showTitle,
+    });
+  };
+
+  const updateTitle = (event) => {
+    updateComponent(projectIndex, containerIndex, componentIndex, {
+      title: event.target.value,
+    });
   };
 </script>
 
@@ -51,10 +61,27 @@
         value={component.type}
         onChange={updateComponentType}
       />
+      <ToggleSwitch
+        label="Show Title"
+        checked={component.showTitle}
+        onChange={toggleTitleVisibility}
+      />
+      {#if component.showTitle}
+        <input
+          type="text"
+          class="input input-bordered w-full max-w-96 mt-2"
+          bind:value={component.title}
+          on:input={updateTitle}
+          placeholder="Component Title"
+        />
+      {/if}
     {/if}
 
     <!-- Render the appropriate component based on type -->
-    <div class="component-body">
+      <div class="component-body">
+        {#if component.showTitle && $mode !== 'edit'}
+        <h3 class="text-lg font-semibold">{component.title || 'Untitled Component'}</h3>
+      {/if}    
       {#if component.type === 'text'}
         <TextComponent {component} {componentIndex} {projectIndex} {containerIndex} />
       {:else if component.type === 'image'}

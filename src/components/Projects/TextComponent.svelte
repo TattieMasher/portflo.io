@@ -15,12 +15,10 @@
     selectedElement.set(`project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`);
   };
 
-  const handleTitleChange = (event) => { 
-    updateComponent({ title: event.target.value });
-  };
-
   const handleContentChange = (event) => {
-    updateComponent({ content: event.target.value });
+    updateComponent(projectIndex, containerIndex, componentIndex, {
+      content: event.target.value,
+    });
   };
 </script>
 
@@ -47,14 +45,7 @@
   )}
 >
   {#if $mode === 'edit'}
-    <!-- Input fields for editing text component -->
-    <input
-      class="input input-bordered w-full max-w-96 mt-2"
-      type="text"
-      bind:value={component.title}
-      on:input={handleTitleChange}
-      placeholder="Component Title"
-    />
+    <!-- Input field for editing content -->
     <textarea
       class="textarea textarea-bordered w-full max-w-96 mt-2"
       bind:value={component.content}
@@ -63,7 +54,6 @@
     ></textarea>
   {:else}
     <!-- Display fields for component -->
-    <h3 class="text-lg font-semibold">{component.title}</h3>
     <p>{component.content}</p>
   {/if}
 </div>
