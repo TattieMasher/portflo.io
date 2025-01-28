@@ -91,3 +91,9 @@
     {/if}
   {/if}
 </div>
+
+<style>
+  img {
+    max-width: 60vw !important;
+  }
+</style>

@@ -3,7 +3,7 @@
   import { selectedElement } from '../../stores/selectedElement.js';
   import { elementStyles } from '../../stores/elementStyles.js';
   import { getStyleString } from '../../utils/styleUtils.js';
-  import { updateComponent } from '../../utils/updateComponent.js'; // Import centralized function
+  import { updateComponent } from '../../utils/updateComponent.js';
 
   export let component;
   export let componentIndex;
@@ -25,7 +25,20 @@
   };
 
   const handleVideoURLChange = (event) => {
-    updateComponent(projectIndex, containerIndex, componentIndex, { videoUrl: event.target.value, videoType: 'url' });
+    const url = event.target.value.trim();
+    const embedUrl = getEmbedUrl(url);
+    if (embedUrl) {
+      updateComponent(projectIndex, containerIndex, componentIndex, { videoUrl: embedUrl, videoType: 'url' });
+    }
+  };
+
+  const getEmbedUrl = (url) => {
+    // Handle YouTube URLs
+    const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
+    if (youtubeMatch) {
+      return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+    }
+    return null;
   };
 
   // Get styles for container and video
@@ -64,7 +77,7 @@
       />
 
       <label class="label mt-4">
-        <span class="label-text">Or Enter Video URL (YouTube, Vimeo, etc.)</span>
+        <span class="label-text">Or Enter YouTube Video URL</span>
       </label>
       <input
         type="text"
@@ -75,7 +88,7 @@
       />
 
       {#if component.videoUrl}
-        <div class="mt-4">
+        <div class="mt-4 video-wrapper">
           {#if component.videoType === 'file'}
             <video
               controls
@@ -87,7 +100,7 @@
               src={component.videoUrl}
               frameborder="0"
               allowfullscreen
-              style={getStyleString(videoStyles)}
+              class="responsive-video"
             ></iframe>
           {/if}
         </div>
@@ -96,19 +109,19 @@
   {:else}
     <!-- Display the video -->
     {#if component.videoUrl}
-      <div>
+      <div class="video-wrapper">
         {#if component.videoType === 'file'}
           <video
             controls
             src={component.videoUrl}
-            style={getStyleString(videoStyles)}
+            class="responsive-video"
           ></video>
         {:else}
           <iframe
             src={component.videoUrl}
             frameborder="0"
             allowfullscreen
-            style={getStyleString(videoStyles)}
+            class="responsive-video"
           ></iframe>
         {/if}
       </div>
@@ -117,9 +130,22 @@
 </div>
 
 <style>
-  video,
-  iframe {
+  .video-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    height: auto;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .responsive-video {
+    width: 100%;
+    max-width: 100vh; /* Restrict max width */
+    max-height: 60vh; /* Prevent overflow */
+  }
+
+  video {
+    object-fit: contain; /* Ensure it fits within the bounds */
   }
 </style>
