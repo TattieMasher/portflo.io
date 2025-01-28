@@ -4,9 +4,11 @@
   
     let portfolioData = '{}'; // Default empty JSON
   
-    onMount(() => {
-      portfolioData = exportPortfolio(); // Use the updated function
-    });
+    async function fetchPortfolioData() {
+      portfolioData = await exportPortfolio(); // Wait for promise to resolve
+    }
+  
+    onMount(fetchPortfolioData);
   
     const copyToClipboard = async () => {
       await navigator.clipboard.writeText(portfolioData);
@@ -19,7 +21,7 @@
       <h2 class="text-lg font-bold">Portfolio JSON Structure</h2>
       <button class="btn btn-primary" on:click={copyToClipboard}>Copy JSON</button>
     </div>
-    <pre class="whitespace-pre-wrap overflow-auto text-sm">{{ portfolioData }}</pre>
+    <pre class="whitespace-pre-wrap overflow-auto text-sm">{portfolioData}</pre>
   </div>
   
   <style>
@@ -31,3 +33,4 @@
       font-family: monospace;
     }
   </style>
+  
