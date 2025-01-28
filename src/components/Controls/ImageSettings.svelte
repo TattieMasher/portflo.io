@@ -5,9 +5,9 @@
 
   const { selectedElement, elementStyles } = rootStore;
 
-  let imageWidth = 100; // Percentage value
-  let imageHeight = 'auto';
-  let borderRadius = 0; // Percentage value
+  let imageWidth = 100; // Default to 100% for new images
+  let widthUnit = '%'; // Default unit for width
+  let borderRadius = 0; // Percentage value for border radius
   let previousSelectedElement = null;
 
   // Initialize local variables when the selected element changes
@@ -18,19 +18,35 @@
 
   function initializeLocalVariables() {
     const styles = $elementStyles[$selectedElement]?.image || {};
-    imageWidth = styles.width?.endsWith('%') ? parseInt(styles.width) : 100;
-    imageHeight = styles.height || 'auto';
+    if (styles.width) {
+      imageWidth = parseInt(styles.width) || 100;
+      widthUnit = styles.width.endsWith('%') ? '%' : 'px';
+    } else {
+      // Default to 100% if no width is defined
+      imageWidth = 100;
+      widthUnit = '%';
+    }
     borderRadius = parseInt(styles.borderRadius) || 0;
   }
 
-  // Reactive updates to element styles
-  $: updateElementStyle($selectedElement, 'width', `${imageWidth}%`, 'image');
+  function handleWidthUnitChange(newUnit) {
+    // Set sensible defaults when switching units
+    if (newUnit === '%' && widthUnit === 'px') {
+      imageWidth = 100; // Default to 100% when switching from px
+    } else if (newUnit === 'px' && widthUnit === '%') {
+      imageWidth = 500; // Default to 500px when switching from %
+    }
+    widthUnit = newUnit;
+  }
+
+  // Update the width style dynamically based on the unit
   $: updateElementStyle(
     $selectedElement,
-    'height',
-    imageHeight === 'auto' ? 'auto' : `${imageHeight}px`,
+    'width',
+    `${imageWidth}${widthUnit}`,
     'image'
   );
+
   $: updateElementStyle($selectedElement, 'borderRadius', `${borderRadius}%`, 'image');
 </script>
 
@@ -40,24 +56,28 @@
     Image Settings
   </label>
   <div class="collapse-content">
+    <!-- Toggle for Width Unit -->
+    <div class="form-control mb-4">
+      <label class="label cursor-pointer">
+        <span class="label-text">Width Unit</span>
+        <input
+          type="checkbox"
+          class="toggle toggle-primary"
+          checked={widthUnit === '%'}
+          on:change={(e) => handleWidthUnitChange(e.target.checked ? '%' : 'px')}
+        />
+        <span class="label-text-alt ml-2">{widthUnit === '%' ? 'Percentage' : 'Pixels'}</span>
+      </label>
+    </div>
+
     <!-- Width Setting -->
     <RangeSetting
       label="Width"
-      min={0}
-      max={100}
+      min={widthUnit === '%' ? 0 : 50}
+      max={widthUnit === '%' ? 100 : 1920}
       value={imageWidth}
-      unit="%"
+      unit={widthUnit}
       onChange={(val) => (imageWidth = val)}
-    />
-
-    <!-- Height Setting -->
-    <RangeSetting
-      label="Height"
-      min={50}
-      max={500}
-      value={parseInt(imageHeight) || 50}
-      unit="px"
-      onChange={(val) => (imageHeight = `${val}px`)}
     />
 
     <!-- Border Radius Setting -->
