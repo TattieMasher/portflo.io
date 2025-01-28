@@ -10,6 +10,8 @@
   import { mode } from '../stores/mode.js';
   import { user } from '../stores/user.js';
 
+  import DebugPortfolio from '../components/DebugPortfolio.svelte';
+
   const addProject = () => {
     projects.update((proj) => [
       ...proj,
@@ -251,6 +253,7 @@
       <div class="divider"></div>
       <ProjectList />
     </div>
+    <DebugPortfolio /> <!-- Debugging Output TODO: DELETE ME -->
 
     {#if $mode === 'edit'}
       <RightSidebar class="h-full" />

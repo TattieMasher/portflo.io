@@ -1,4 +1,5 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
+import { elementStyles } from './elementStyles.js'; // Import styles store
 
 export const projects = writable([
   {
@@ -52,3 +53,27 @@ export const projects = writable([
     ],
   },
 ]);
+
+/* Just using for troubleshooting for now, but this will output the data to save to the API. */
+export function exportPortfolio() {
+  let projectData = get(projects);
+  let stylesData = get(elementStyles); // Fetch stored styles
+
+  // Merge styles into components dynamically
+  const mergedData = projectData.map((project, projectIndex) => ({
+    ...project,
+    containers: project.containers.map((container, containerIndex) => ({
+      ...container,
+      components: container.components.map((component, componentIndex) => {
+        const componentId = `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`;
+        
+        return {
+          ...component,
+          styles: stylesData[componentId] || {} // Attach stored styles (or empty object if none)
+        };
+      })
+    }))
+  }));
+
+  return JSON.stringify(mergedData, null, 2);
+}
