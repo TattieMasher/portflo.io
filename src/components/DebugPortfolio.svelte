@@ -31,7 +31,8 @@
   
   <style>
     .debug-output {
-      max-height: 400px;
+      min-height: 400px;
+      max-height: 90vh;
       overflow-y: auto;
       border: 1px solid #ccc;
       padding: 10px;
