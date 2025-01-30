@@ -1,5 +1,5 @@
-import { writable, get } from 'svelte/store';
-import { elementStyles } from './elementStyles.js'; // Import styles store
+import { writable, get, derived } from 'svelte/store';
+import { elementStyles } from './elementStyles.js';
 
 export const projects = writable([
   {
@@ -54,26 +54,34 @@ export const projects = writable([
   },
 ]);
 
-/* Just using for troubleshooting for now, but this will output the data to save to the API. */
+// includes styles dynamically
+export const mergedProjects = derived(
+  [projects, elementStyles],
+  ([$projects, $elementStyles]) => {
+    return $projects.map((project, projectIndex) => ({
+      ...project,
+      containers: project.containers.map((container, containerIndex) => ({
+        ...container,
+        components: container.components.map((component, componentIndex) => {
+          const componentId = `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`;
+          return {
+            ...component,
+            styles: $elementStyles[componentId] || {},
+          };
+        }),
+      })),
+    }));
+  }
+);
+
 export function exportPortfolio() {
-  let projectData = get(projects);
-  let stylesData = get(elementStyles); // Fetch stored styles
+  return new Promise((resolve) => {
+    const unsubscribe = mergedProjects.subscribe((data) => {
+      console.log("Debug: mergedProjects Data (to be exported):", data);
+      if (data.length === 0) console.warn("⚠️ No projects found in mergedProjects!");
 
-  // Merge styles into components dynamically
-  const mergedData = projectData.map((project, projectIndex) => ({
-    ...project,
-    containers: project.containers.map((container, containerIndex) => ({
-      ...container,
-      components: container.components.map((component, componentIndex) => {
-        const componentId = `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`;
-        
-        return {
-          ...component,
-          styles: stylesData[componentId] || {} // Attach stored styles (or empty object if none)
-        };
-      })
-    }))
-  }));
-
-  return JSON.stringify(mergedData, null, 2);
+      resolve(JSON.stringify(data, null, 2));
+      setTimeout(() => unsubscribe(), 0);
+    });
+  });
 }
