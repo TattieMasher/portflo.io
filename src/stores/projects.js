@@ -54,32 +54,38 @@ export const projects = writable([
   },
 ]);
 
-// includes styles dynamically
 export const mergedProjects = derived(
   [projects, elementStyles],
   ([$projects, $elementStyles]) => {
-    return $projects.map((project, projectIndex) => ({
-      ...project,
-      containers: project.containers.map((container, containerIndex) => ({
-        ...container,
-        components: container.components.map((component, componentIndex) => {
-          const componentId = `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`;
+    return $projects.map((project, projectIndex) => {
+      const projectId = `project-${projectIndex}`;
+
+      return {
+        ...project,
+        styles: $elementStyles[projectId] || {}, // Include project styles
+        containers: project.containers.map((container, containerIndex) => {
+          const containerId = `project-${projectIndex}-container-${containerIndex}`;
+
           return {
-            ...component,
-            styles: $elementStyles[componentId] || {},
+            ...container,
+            styles: $elementStyles[containerId] || {}, // Include container styles
+            components: container.components.map((component, componentIndex) => {
+              const componentId = `project-${projectIndex}-container-${containerIndex}-component-${componentIndex}`;
+              return {
+                ...component,
+                styles: $elementStyles[componentId] || {}, // Include component styles
+              };
+            }),
           };
         }),
-      })),
-    }));
+      };
+    });
   }
 );
 
 export function exportPortfolio() {
   return new Promise((resolve) => {
     const unsubscribe = mergedProjects.subscribe((data) => {
-      console.log("Debug: mergedProjects Data (to be exported):", data);
-      if (data.length === 0) console.warn("⚠️ No projects found in mergedProjects!");
-
       resolve(JSON.stringify(data, null, 2));
       setTimeout(() => unsubscribe(), 0);
     });

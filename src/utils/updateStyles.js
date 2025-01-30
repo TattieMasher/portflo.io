@@ -1,5 +1,4 @@
 import { elementStyles } from '../stores/elementStyles.js';
-import { syncElementStylesToAPI } from './api.js';
 
 export function updateElementStyle(elementId, property, value, subElement = null) {
   if (!elementId) return;
@@ -14,10 +13,6 @@ export function updateElementStyle(elementId, property, value, subElement = null
     } else {
       updatedStyles[elementId][property] = value;
     }
-
-    console.log(`🔹 updateElementStyle updated ${elementId}:`, updatedStyles[elementId]);
-
-    // syncElementStylesToAPI(elementId, updatedStyles[elementId]); ?
 
     return updatedStyles;
   });
